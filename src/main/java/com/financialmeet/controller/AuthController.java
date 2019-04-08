@@ -4,7 +4,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import com.financialmeet.model.Account;
 import com.financialmeet.model.AuthenticationRequest;
-import com.financialmeet.service.AuthService;
+import com.financialmeet.service.impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,35 +26,34 @@ public class AuthController {
   private PasswordEncoder encoder;
 
   @Autowired
-  private AuthService authService;
+  private AuthServiceImpl authServiceImpl;
 
   @PostMapping("/signin")
   public ResponseEntity signIn(@RequestBody AuthenticationRequest data){
-    return ok(authService.signIn(data));
+    return ok(authServiceImpl.signIn(data));
   }
 
   @PostMapping("/signup/user")
   public ResponseEntity userSignUp(@RequestBody Account account) {
-    return authService.userSignUp(account);
+    return authServiceImpl.userSignUp(account);
   }
 
   @PostMapping("/signup/agent")
   @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity signupAdmin(@RequestBody Account account) {
-    return authService.agentSignUp(account);
+    return authServiceImpl.agentSignUp(account);
   }
 
   @PostMapping("/signup/internal")
   @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity internalSignUp(@RequestBody Account account) {
-    return authService.internalSignUp(account);
+    return authServiceImpl.internalSignUp(account);
   }
 
   @GetMapping("/me")
   @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity getCurrentUserDetails(@AuthenticationPrincipal UserDetails userDetails){
-    return ok(authService.getCurrentUserDetails(userDetails));
+    return ok(authServiceImpl.getCurrentUserDetails(userDetails));
   }
 
 }
-
