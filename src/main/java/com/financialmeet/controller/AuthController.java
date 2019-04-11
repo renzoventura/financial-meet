@@ -2,8 +2,8 @@ package com.financialmeet.controller;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.financialmeet.model.Account;
-import com.financialmeet.model.AuthenticationRequest;
+import com.financialmeet.dto.AccountDTO;
+import com.financialmeet.dto.AuthenticationRequestDTO;
 import com.financialmeet.service.impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,25 +29,25 @@ public class AuthController {
   private AuthServiceImpl authServiceImpl;
 
   @PostMapping("/signin")
-  public ResponseEntity signIn(@RequestBody AuthenticationRequest data){
+  public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO data){
     return ok(authServiceImpl.signIn(data));
   }
 
   @PostMapping("/signup/user")
-  public ResponseEntity userSignUp(@RequestBody Account account) {
-    return authServiceImpl.userSignUp(account);
+  public ResponseEntity userSignUp(@RequestBody AccountDTO accountDTO) {
+    return authServiceImpl.userSignUp(accountDTO);
   }
 
   @PostMapping("/signup/agent")
   @CrossOrigin(origins = "http://localhost:4200")
-  public ResponseEntity signupAdmin(@RequestBody Account account) {
-    return authServiceImpl.agentSignUp(account);
+  public ResponseEntity signupAdmin(@RequestBody AccountDTO accountDTO) {
+    return authServiceImpl.agentSignUp(accountDTO);
   }
 
   @PostMapping("/signup/internal")
   @CrossOrigin(origins = "http://localhost:4200")
-  public ResponseEntity internalSignUp(@RequestBody Account account) {
-    return authServiceImpl.internalSignUp(account);
+  public ResponseEntity internalSignUp(@RequestBody AccountDTO accountDTO) {
+    return authServiceImpl.internalSignUp(accountDTO);
   }
 
   @GetMapping("/me")

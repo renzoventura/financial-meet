@@ -1,20 +1,20 @@
 package com.financialmeet.service;
 
-import com.financialmeet.model.Account;
-import com.financialmeet.model.AuthenticationRequest;
+import com.financialmeet.dto.AccountDTO;
+import com.financialmeet.dto.AuthenticationRequestDTO;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
 
-  Map signIn(AuthenticationRequest data);
+  Map signIn(AuthenticationRequestDTO data);
 
-  ResponseEntity userSignUp(Account account);
+  ResponseEntity userSignUp(AccountDTO accountDTO);
 
-  ResponseEntity agentSignUp(Account account);
+  ResponseEntity agentSignUp(AccountDTO accountDTO);
 
-  ResponseEntity internalSignUp(Account account);
+  ResponseEntity internalSignUp(AccountDTO accountDTO);
 
   ResponseEntity getCurrentUserDetails(UserDetails userDetails);
 

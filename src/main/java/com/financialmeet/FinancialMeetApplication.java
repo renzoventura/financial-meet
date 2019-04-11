@@ -1,6 +1,6 @@
 package com.financialmeet;
 
-import com.financialmeet.model.Account;
+import com.financialmeet.dto.AccountDTO;
 import java.util.Optional;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +31,7 @@ public class FinancialMeetApplication {
 class DataJpaConfig {
 
 	@Bean
-	public AuditorAware<Account> auditor() {
+	public AuditorAware<AccountDTO> auditor() {
 		return () -> {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -39,7 +39,7 @@ class DataJpaConfig {
 				return Optional.empty();
 			}
 
-			return Optional.of((Account) authentication.getPrincipal());
+			return Optional.of((AccountDTO) authentication.getPrincipal());
 		};
 	}
 }

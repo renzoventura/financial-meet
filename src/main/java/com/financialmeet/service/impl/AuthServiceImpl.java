@@ -1,16 +1,17 @@
 package com.financialmeet.service.impl;
 
+import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_AGENT;
+import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_INTERNAL;
+import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.financialmeet.model.Account;
-import com.financialmeet.model.AuthenticationRequest;
+import com.financialmeet.dto.AccountDTO;
+import com.financialmeet.dto.AuthenticationRequestDTO;
 import com.financialmeet.repository.AccountRepository;
 import com.financialmeet.security.auth.JwtTokenProvider;
 import com.financialmeet.service.AuthService;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,6 @@ public class AuthServiceImpl implements AuthService {
   private static final String TOKEN = "token";
   private static final String ROLES  = "roles";
 
-  private static final String ACCOUNT_ROLE_USER = "ROLE_USER";
-  private static final String ACCOUNT_ROLE_AGENT = "ROLE_AGENT";
-  private static final String ACCOUNT_ROLE_INTERNAL = "ROLE_INTERNAL";
-
   @Autowired
   private AccountRepository accountRepository;
 
@@ -50,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
   private PasswordEncoder encoder;
 
   @Override
-  public Map signIn(@RequestBody AuthenticationRequest data){
+  public Map signIn(@RequestBody AuthenticationRequestDTO data){
     try {
       String username = data.getUsername();
       String password = data.getPassword();
@@ -66,35 +63,35 @@ public class AuthServiceImpl implements AuthService {
       return model;
 
     } catch (Exception e ){
-      throw new BadCredentialsException("Invalid Account");
+      throw new BadCredentialsException("Invalid AccountDTO");
     }
   }
 
   @Override
-  public ResponseEntity userSignUp(@RequestBody Account account) {
-    if (!accountRepository.findByUsername(account.getUsername()).isPresent()) {
-      account.setPassword(encoder.encode(account.getPassword()));
-      account.setRoles(singletonList(ACCOUNT_ROLE_USER));
-      return ok(accountRepository.save(account));
+  public ResponseEntity userSignUp(@RequestBody AccountDTO accountDTO) {
+    if (!accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
+      accountDTO.setPassword(encoder.encode(accountDTO.getPassword()));
+      accountDTO.setRoles(singletonList(ACCOUNT_ROLE_USER));
+      return ok(accountRepository.save(accountDTO));
     }
     throw new IllegalArgumentException("The username is already in use");
   }
 
-  public ResponseEntity agentSignUp(@RequestBody Account account) {
-    if (!accountRepository.findByUsername(account.getUsername()).isPresent()) {
-      account.setPassword(encoder.encode(account.getPassword()));
-      account.setRoles(singletonList(ACCOUNT_ROLE_AGENT));
-      return ok(accountRepository.save(account));
+  public ResponseEntity agentSignUp(@RequestBody AccountDTO accountDTO) {
+    if (!accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
+      accountDTO.setPassword(encoder.encode(accountDTO.getPassword()));
+      accountDTO.setRoles(singletonList(ACCOUNT_ROLE_AGENT));
+      return ok(accountRepository.save(accountDTO));
     }
     throw new IllegalArgumentException("The username is already in use");
   }
 
   @Override
-  public ResponseEntity internalSignUp(@RequestBody Account account) {
-    if (!accountRepository.findByUsername(account.getUsername()).isPresent()) {
-      account.setPassword(encoder.encode(account.getPassword()));
-      account.setRoles(singletonList(ACCOUNT_ROLE_INTERNAL));
-      return ok(accountRepository.save(account));
+  public ResponseEntity internalSignUp(@RequestBody AccountDTO accountDTO) {
+    if (!accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
+      accountDTO.setPassword(encoder.encode(accountDTO.getPassword()));
+      accountDTO.setRoles(singletonList(ACCOUNT_ROLE_INTERNAL));
+      return ok(accountRepository.save(accountDTO));
     }
     throw new IllegalArgumentException("The username is already in use");
   }

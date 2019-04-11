@@ -15,7 +15,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     this.accounts = accounts;
   }
 
-  @Override //since Account implements UserDetails
+  @Override //since AccountDTO implements UserDetails
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return this.accounts.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
