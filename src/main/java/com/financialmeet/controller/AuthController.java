@@ -29,8 +29,8 @@ public class AuthController {
   private AuthServiceImpl authServiceImpl;
 
   @PostMapping("/signin")
-  public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO data){
-    return ok(authServiceImpl.signIn(data));
+  public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO currentAccountDetails){
+    return ok(authServiceImpl.signIn(currentAccountDetails));
   }
 
   @PostMapping("/signup/user")

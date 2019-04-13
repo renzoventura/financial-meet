@@ -33,9 +33,9 @@ public class ApplicationController {
     return ok(applicationServiceImpl.getApplicationById(applicationId));
   }
 
-  @GetMapping("/owner/{ownerId}")
-  private ResponseEntity getApplicationByOwnerId(@PathVariable("ownerId") Long ownerId) {
-    return ok(applicationServiceImpl.getApplicationByOwnerId(ownerId));
+  @GetMapping("/current")
+  private ResponseEntity getApplicationByOwnerId(@AuthenticationPrincipal UserDetails userDetails) {
+    return ok(applicationServiceImpl.getApplicationsByOwner(userDetails));
   }
 
   @PostMapping("/create")
@@ -56,7 +56,8 @@ public class ApplicationController {
     try {
       return ok(applicationServiceImpl.assignAgentToApplication(applicationId, userDetails));
     } catch (Exception e) {
-      return badRequest().body("application creation failed");
+      return badRequest().body("Cannot assign agent to this application.");
     }
   }
+
 }
