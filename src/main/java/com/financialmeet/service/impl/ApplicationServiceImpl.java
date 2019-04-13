@@ -1,6 +1,10 @@
 package com.financialmeet.service.impl;
 
 
+import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_AGENT;
+import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_INTERNAL;
+import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
+
 import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.ApplicationDTO;
 import com.financialmeet.repository.AccountRepository;
@@ -49,7 +53,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
 
     if (currentAccount.isPresent()) {
-      if (currentAccount.get().getRoles().contains(AccountDTO.ACCOUNT_ROLE_USER)) {
+      if (currentAccount.get().getRoles().contains(ACCOUNT_ROLE_USER)) {
         applicationDTO.setOwner(currentAccount.get());
         applicationRepository.save(applicationDTO);
         return applicationDTO;
@@ -59,15 +63,34 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public ApplicationDTO assignAgentToApplication(Long applicationId, UserDetails userDetails) {
+  public ApplicationDTO assignAgentToApplication(Long applicationId, Long agentId) {
 
-    Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
+    Optional<AccountDTO> currentAccount = accountRepository.findById(agentId);
     Optional<ApplicationDTO> currentApplication = applicationRepository.findById(applicationId);
 
     if (currentAccount.isPresent() && currentApplication.isPresent()) {
-      if (currentAccount.get().getRoles().contains(AccountDTO.ACCOUNT_ROLE_AGENT)) {
+      if (currentAccount.get().getRoles().contains(ACCOUNT_ROLE_AGENT)) {
+
         currentApplication.get().setAgent(currentAccount.get());
         applicationRepository.save(currentApplication.get());
+
+        return currentApplication.get();
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public ApplicationDTO assignInternalToApplication(Long applicationId, Long internalId) {
+    Optional<AccountDTO> currentAccount = accountRepository.findById(internalId);
+    Optional<ApplicationDTO> currentApplication = applicationRepository.findById(applicationId);
+
+    if (currentAccount.isPresent() && currentApplication.isPresent()) {
+      if (currentAccount.get().getRoles().contains(ACCOUNT_ROLE_INTERNAL)) {
+
+        currentApplication.get().setInternal(currentAccount.get());
+        applicationRepository.save(currentApplication.get());
+
         return currentApplication.get();
       }
     }

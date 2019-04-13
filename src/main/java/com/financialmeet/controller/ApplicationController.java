@@ -49,15 +49,33 @@ public class ApplicationController {
     }
   }
 
-  @PutMapping("/{applicationId}/assign/agent")
+  @PutMapping("/{applicationId}/assign/agent/{agentId}")
   private ResponseEntity assignAgentToApplication(
-      @PathVariable("applicationId") Long applicationId,
-      @AuthenticationPrincipal UserDetails userDetails) {
+      @PathVariable("applicationId") Long applicationId, @PathVariable Long agentId) {
     try {
-      return ok(applicationServiceImpl.assignAgentToApplication(applicationId, userDetails));
+      ApplicationDTO currentApplication = applicationServiceImpl.assignAgentToApplication(applicationId, agentId);
+      if (currentApplication != null) {
+        return ok(currentApplication);
+      } else {
+        return badRequest().body("Unable to assign agent to application.");
+      }
     } catch (Exception e) {
-      return badRequest().body("Cannot assign agent to this application.");
+      return badRequest().body("Something went wrong!");
     }
   }
 
+  @PutMapping("/{applicationId}/assign/internal/{internalId}")
+  private ResponseEntity assignInternalToApplication(
+      @PathVariable("applicationId") Long applicationId, @PathVariable Long internalId) {
+    try {
+      ApplicationDTO currentApplication = applicationServiceImpl.assignInternalToApplication(applicationId, internalId);
+      if (currentApplication != null) {
+        return ok(currentApplication);
+      } else {
+        return badRequest().body("Unable to assign agent to application.");
+      }
+    } catch (Exception e) {
+      return badRequest().body("Something went wrong!");
+    }
+  }
 }

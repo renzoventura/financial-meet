@@ -28,19 +28,16 @@ public class ApplicationDTO {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "OWNER", nullable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
-  @JsonIgnore
   private AccountDTO owner;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "AGENT")
   @OnDelete(action = OnDeleteAction.CASCADE)
-  @JsonIgnore
   private AccountDTO agent;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "INTERNAL")
   @OnDelete(action = OnDeleteAction.CASCADE)
-  @JsonIgnore
   private AccountDTO internal;
 
   public AccountDTO getAgent() {

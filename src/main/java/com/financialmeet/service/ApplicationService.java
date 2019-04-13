@@ -1,7 +1,6 @@
 package com.financialmeet.service;
 
 
-import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.ApplicationDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,6 +14,8 @@ public interface ApplicationService {
 
   ApplicationDTO createApplication(ApplicationDTO applicationDTO, UserDetails userDetails);
 
-  ApplicationDTO assignAgentToApplication (Long applicationId, UserDetails userDetails);
+  ApplicationDTO assignAgentToApplication (Long applicationId, Long agentId);
+
+  ApplicationDTO assignInternalToApplication(Long applicationId, Long agentId);
 
 }
