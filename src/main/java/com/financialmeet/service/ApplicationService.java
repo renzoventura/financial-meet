@@ -11,11 +11,10 @@ public interface ApplicationService {
 
   ApplicationDTO getApplicationById(Long applicationId);
 
-
   ApplicationDTO getApplicationByOwnerId(Long applicationId);
 
-  ResponseEntity createApplication(ApplicationDTO applicationDTO, UserDetails userDetails);
+  ApplicationDTO createApplication(ApplicationDTO applicationDTO, UserDetails userDetails);
 
-  ResponseEntity assignAgentToApplication (Long applicationId, UserDetails userDetails);
+  ApplicationDTO assignAgentToApplication (Long applicationId, UserDetails userDetails);
 
 }

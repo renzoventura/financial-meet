@@ -43,8 +43,7 @@ public class ApplicationController {
       @RequestBody ApplicationDTO applicationDTO,
       @AuthenticationPrincipal UserDetails userDetails) {
     try {
-      applicationServiceImpl.createApplication(applicationDTO, userDetails);
-      return ok().body("application created");
+      return ok(applicationServiceImpl.createApplication(applicationDTO, userDetails));
     } catch (Exception e) {
       return badRequest().body("application creation failed");
     }
@@ -55,7 +54,7 @@ public class ApplicationController {
       @PathVariable("applicationId") Long applicationId,
       @AuthenticationPrincipal UserDetails userDetails) {
     try {
-      return applicationServiceImpl.assignAgentToApplication(applicationId, userDetails);
+      return ok(applicationServiceImpl.assignAgentToApplication(applicationId, userDetails));
     } catch (Exception e) {
       return badRequest().body("application creation failed");
     }

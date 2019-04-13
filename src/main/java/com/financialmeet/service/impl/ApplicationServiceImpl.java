@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 
@@ -50,40 +52,34 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public ResponseEntity createApplication(ApplicationDTO applicationDTO, UserDetails userDetails) {
+  public ApplicationDTO createApplication(ApplicationDTO applicationDTO, UserDetails userDetails) {
 
-    if (accountRepository.findByUsername(userDetails.getUsername()).isPresent()) {
-      AccountDTO currentAccount = accountRepository.findByUsername(userDetails.getUsername()).get();
+    Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
 
-      if (!currentAccount.getRoles().contains(AccountDTO.ACCOUNT_ROLE_USER)) {
-        return badRequest().body("not correct account type");
+    if (currentAccount.isPresent()) {
+      if (currentAccount.get().getRoles().contains(AccountDTO.ACCOUNT_ROLE_USER)) {
+        applicationDTO.setOwner(currentAccount.get());
+        applicationRepository.save(applicationDTO);
+        return applicationDTO;
       }
-
-      applicationDTO.setOwner(accountRepository.findByUsername(userDetails.getUsername()).get());
-      applicationRepository.save(applicationDTO);
-      return ok(applicationDTO);
-    } else {
-      return badRequest().body("Account Not found");
     }
+    return null;
   }
 
   @Override
-  public ResponseEntity assignAgentToApplication(Long applicationId, UserDetails userDetails) {
+  public ApplicationDTO assignAgentToApplication(Long applicationId, UserDetails userDetails) {
 
-    if (accountRepository.findByUsername(userDetails.getUsername()).isPresent()
-        && applicationRepository.findById(applicationId).isPresent()) {
-      AccountDTO currentAccount = accountRepository.findByUsername(userDetails.getUsername()).get();
-      ApplicationDTO currentApplication = applicationRepository.findById(applicationId).get();
+    Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
+    Optional<ApplicationDTO> currentApplication = applicationRepository.findById(applicationId);
 
-      if (!currentAccount.getRoles().contains(AccountDTO.ACCOUNT_ROLE_AGENT)) {
-        return badRequest().body("not correct account type");
+    if (currentAccount.isPresent() && currentApplication.isPresent()) {
+      if (currentAccount.get().getRoles().contains(AccountDTO.ACCOUNT_ROLE_AGENT)) {
+        currentApplication.get().setAgent(currentAccount.get());
+        applicationRepository.save(currentApplication.get());
+        return currentApplication.get();
       }
-      currentApplication.setAgent(
-          accountRepository.findByUsername(userDetails.getUsername()).get());
-      applicationRepository.save(currentApplication);
-      return ok(currentApplication);
-    } else {
-      return badRequest().body("Account Not found");
     }
+    return null;
   }
+
 }
