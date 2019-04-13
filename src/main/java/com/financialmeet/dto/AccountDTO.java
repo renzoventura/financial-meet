@@ -52,45 +52,6 @@ public class AccountDTO implements UserDetails {
   @JsonIgnore
   private List<String> roles = new ArrayList<>();
 
-  @OneToMany(cascade = CascadeType.ALL,
-      fetch = FetchType.LAZY, mappedBy = "owner")
-  public Set<ApplicationDTO> customerApplications = new HashSet<>();
-
-  @OneToMany(cascade = CascadeType.ALL,
-      fetch = FetchType.LAZY, mappedBy = "agent")
-  public Set<ApplicationDTO> agentAssignedApplications = new HashSet<>();
-
-  @OneToMany(cascade = CascadeType.ALL,
-      fetch = FetchType.LAZY, mappedBy = "internal")
-  public Set<ApplicationDTO> internalAssignedApplications = new HashSet<>();
-
-  public Set<ApplicationDTO> getCustomerApplications() {
-    return customerApplications;
-  }
-
-  public void setCustomerApplications(
-      Set<ApplicationDTO> customerApplications) {
-    this.customerApplications = customerApplications;
-  }
-
-  public Set<ApplicationDTO> getAgentAssignedApplications() {
-    return agentAssignedApplications;
-  }
-
-  public void setAgentAssignedApplications(
-      Set<ApplicationDTO> agentAssignedApplications) {
-    this.agentAssignedApplications = agentAssignedApplications;
-  }
-
-  public Set<ApplicationDTO> getInternalAssignedApplications() {
-    return internalAssignedApplications;
-  }
-
-  public void setInternalAssignedApplications(
-      Set<ApplicationDTO> internalAssignedApplications) {
-    this.internalAssignedApplications = internalAssignedApplications;
-  }
-
   @Override
   @JsonIgnore
   public Collection<? extends GrantedAuthority> getAuthorities() {
