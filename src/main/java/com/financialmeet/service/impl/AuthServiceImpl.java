@@ -14,6 +14,7 @@ import com.financialmeet.security.auth.JwtTokenProvider;
 import com.financialmeet.service.AuthService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,13 +54,17 @@ public class AuthServiceImpl implements AuthService {
       String password = data.getPassword();
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
 
-      String token = jwtTokenProvider.createToken(username, this.accountRepository
-          .findByUsername(username).orElseThrow(()
-              -> new UsernameNotFoundException("Username " + username + "not found")).getRoles());
+      Optional<AccountDTO> currentUser = accountRepository.findByUsername(username);
+
+      if(!currentUser.isPresent())
+        throw new UsernameNotFoundException("Username " + username + "not found");
+
+      String token = jwtTokenProvider.createToken(username, currentUser.get().getRoles());
 
       Map<Object,Object> model = new HashMap<>();
       model.put(USERNAME, username);
       model.put(TOKEN, token);
+      model.put(ROLES, currentUser.get().getRoles());
       return model;
 
     } catch (Exception e ){
@@ -97,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public ResponseEntity getCurrentUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
+  public ResponseEntity<Map<Object, Object>> getCurrentUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
     Map<Object, Object> account = new HashMap<>();
     account.put(USERNAME, userDetails.getUsername());
     account.put(
@@ -111,4 +116,8 @@ public class AuthServiceImpl implements AuthService {
 
   }
 
+  @Override
+  public ResponseEntity checkTokenVadality(@AuthenticationPrincipal String token) {
+    return ok(token);
+  }
 }

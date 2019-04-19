@@ -1,5 +1,6 @@
 package com.financialmeet.controller;
 
+import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.financialmeet.dto.AccountDTO;
@@ -52,8 +53,17 @@ public class AuthController {
 
   @GetMapping("/me")
   @CrossOrigin(origins = "http://localhost:4200")
-  public ResponseEntity getCurrentUserDetails(@AuthenticationPrincipal UserDetails userDetails){
+  public ResponseEntity getCurrentUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
     return ok(authServiceImpl.getCurrentUserDetails(userDetails));
+  }
+
+  @GetMapping("/checktoken")
+  public ResponseEntity checkTokenVadality(@AuthenticationPrincipal String token) {
+    try {
+      return ok(authServiceImpl.checkTokenVadality(token));
+    } catch (Exception e){
+      return badRequest().body("Session is invalid");
+    }
   }
 
 }

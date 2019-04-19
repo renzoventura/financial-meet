@@ -16,6 +16,8 @@ public interface AuthService {
 
   ResponseEntity internalSignUp(AccountDTO accountDTO);
 
-  ResponseEntity getCurrentUserDetails(UserDetails userDetails);
+  ResponseEntity<?> getCurrentUserDetails(UserDetails userDetails);
+
+  ResponseEntity checkTokenVadality(String token);
 
 }
