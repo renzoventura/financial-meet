@@ -1,6 +1,6 @@
 package com.financialmeet.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,7 +23,21 @@ public class ApplicationDTO {
   @NotNull
   private long id;
 
-  @NotEmpty private String title;
+  @NotEmpty
+  private String title;
+
+  private String description;
+
+  private BigDecimal annualIncome;
+
+  private BigDecimal rates;
+
+  private boolean existingMortgage;
+
+  private boolean rent;
+
+  private Integer numberOfChildren;
+
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "OWNER", nullable = false)
@@ -39,6 +53,54 @@ public class ApplicationDTO {
   @JoinColumn(name = "INTERNAL")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AccountDTO internal;
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public BigDecimal getAnnualIncome() {
+    return annualIncome;
+  }
+
+  public void setAnnualIncome(BigDecimal annualIncome) {
+    this.annualIncome = annualIncome;
+  }
+
+  public BigDecimal getRates() {
+    return rates;
+  }
+
+  public void setRates(BigDecimal rates) {
+    this.rates = rates;
+  }
+
+  public boolean hasExistingMortgage() {
+    return existingMortgage;
+  }
+
+  public void setExistingMortgage(boolean existingMortgage) {
+    this.existingMortgage = existingMortgage;
+  }
+
+  public boolean isRent() {
+    return rent;
+  }
+
+  public void setRent(boolean rent) {
+    this.rent = rent;
+  }
+
+  public Integer getNumberOfChildren() {
+    return numberOfChildren;
+  }
+
+  public void setNumberOfChildren(Integer numberOfChildren) {
+    this.numberOfChildren = numberOfChildren;
+  }
 
   public AccountDTO getAgent() {
     return agent;
