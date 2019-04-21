@@ -6,7 +6,6 @@ import static org.springframework.http.ResponseEntity.ok;
 import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.AuthenticationRequestDTO;
 import com.financialmeet.service.impl.AuthServiceImpl;
-import javax.jws.soap.SOAPBinding.Use;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -59,6 +58,7 @@ public class AuthController {
   }
 
   @GetMapping("/checkrole")
+  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity checkTokenVadality(@AuthenticationPrincipal UserDetails userDetails) {
     try {
       return ok(authServiceImpl.getCurrentUserRoles(userDetails));
@@ -68,6 +68,7 @@ public class AuthController {
   }
 
   @GetMapping("/check/user")
+  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity checkIfUser(@AuthenticationPrincipal UserDetails userDetails) {
     if (authServiceImpl.checkIfUser(userDetails)) {
       return ok(true);
@@ -76,6 +77,7 @@ public class AuthController {
   }
 
   @GetMapping("/check/agent")
+  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity checkIfAgent(@AuthenticationPrincipal UserDetails userDetails) {
     if (authServiceImpl.checkIfAgent(userDetails)) {
       return ok(true);
@@ -84,6 +86,7 @@ public class AuthController {
   }
 
   @GetMapping("/check/Internal")
+  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity checkIfInternal(@AuthenticationPrincipal UserDetails userDetails) {
     if (authServiceImpl.checkIfInternal(userDetails)) {
       return ok(true);
