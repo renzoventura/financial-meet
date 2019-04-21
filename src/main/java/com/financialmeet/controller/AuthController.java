@@ -6,6 +6,7 @@ import static org.springframework.http.ResponseEntity.ok;
 import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.AuthenticationRequestDTO;
 import com.financialmeet.service.impl.AuthServiceImpl;
+import javax.jws.soap.SOAPBinding.Use;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -57,13 +58,36 @@ public class AuthController {
     return ok(authServiceImpl.getCurrentUserDetails(userDetails));
   }
 
-  @GetMapping("/checktoken")
-  public ResponseEntity checkTokenVadality(@AuthenticationPrincipal String token) {
+  @GetMapping("/checkrole")
+  public ResponseEntity checkTokenVadality(@AuthenticationPrincipal UserDetails userDetails) {
     try {
-      return ok(authServiceImpl.checkTokenVadality(token));
+      return ok(authServiceImpl.getCurrentUserRoles(userDetails));
     } catch (Exception e){
       return badRequest().body("Session is invalid");
     }
   }
 
+  @GetMapping("/check/user")
+  public ResponseEntity checkIfUser(@AuthenticationPrincipal UserDetails userDetails) {
+    if (authServiceImpl.checkIfUser(userDetails)) {
+      return ok(true);
+    }
+    return badRequest().body(false);
+  }
+
+  @GetMapping("/check/agent")
+  public ResponseEntity checkIfAgent(@AuthenticationPrincipal UserDetails userDetails) {
+    if (authServiceImpl.checkIfAgent(userDetails)) {
+      return ok(true);
+    }
+    return badRequest().body(false);
+  }
+
+  @GetMapping("/check/Internal")
+  public ResponseEntity checkIfInternal(@AuthenticationPrincipal UserDetails userDetails) {
+    if (authServiceImpl.checkIfInternal(userDetails)) {
+      return ok(true);
+    }
+    return badRequest().body(false);
+  }
 }

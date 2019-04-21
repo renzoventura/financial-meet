@@ -16,8 +16,16 @@ public interface AuthService {
 
   ResponseEntity internalSignUp(AccountDTO accountDTO);
 
-  ResponseEntity<?> getCurrentUserDetails(UserDetails userDetails);
+  Map<Object, Object> getCurrentUserDetails(UserDetails userDetails);
 
-  ResponseEntity checkTokenVadality(String token);
+  Map<Object, Object> getCurrentUserRoles(UserDetails userDetails);
+
+  ResponseEntity checkTokenVadility(String token);
+
+  Boolean checkIfUser(UserDetails userDetails);
+
+  Boolean checkIfAgent(UserDetails userDetails);
+
+  Boolean checkIfInternal(UserDetails userDetails);
 
 }

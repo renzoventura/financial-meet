@@ -102,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public ResponseEntity<Map<Object, Object>> getCurrentUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
+  public Map<Object, Object> getCurrentUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
     Map<Object, Object> account = new HashMap<>();
     account.put(USERNAME, userDetails.getUsername());
     account.put(
@@ -112,12 +112,52 @@ public class AuthServiceImpl implements AuthService {
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(toList()));
-    return ok(account);
+    return account;
 
   }
 
   @Override
-  public ResponseEntity checkTokenVadality(@AuthenticationPrincipal String token) {
-    return ok(token);
+  public Map<Object, Object> getCurrentUserRoles(UserDetails userDetails) {
+    Map<Object, Object> account = new HashMap<>();
+    account.put(
+        ROLES,
+        userDetails
+            .getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(toList()));
+    return account;
+  }
+
+  @Override
+  public ResponseEntity checkTokenVadility(@AuthenticationPrincipal String token) {
+    return ok((token));
+  }
+
+  @Override
+  public Boolean checkIfUser(UserDetails userDetails) {
+    return userDetails
+        .getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(toList()).contains(ACCOUNT_ROLE_USER);
+  }
+
+  @Override
+  public Boolean checkIfAgent(UserDetails userDetails) {
+    return userDetails
+        .getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(toList()).contains(ACCOUNT_ROLE_AGENT);
+  }
+
+  @Override
+  public Boolean checkIfInternal(UserDetails userDetails) {
+    return userDetails
+        .getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(toList()).contains(ACCOUNT_ROLE_INTERNAL);
   }
 }
