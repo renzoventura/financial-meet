@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 public class AuthController {
 
   @Autowired
@@ -40,25 +40,21 @@ public class AuthController {
   }
 
   @PostMapping("/signup/agent")
-  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity signupAdmin(@RequestBody AccountDTO accountDTO) {
     return authServiceImpl.agentSignUp(accountDTO);
   }
 
   @PostMapping("/signup/internal")
-  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity internalSignUp(@RequestBody AccountDTO accountDTO) {
     return authServiceImpl.internalSignUp(accountDTO);
   }
 
   @GetMapping("/me")
-  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity getCurrentUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
     return ok(authServiceImpl.getCurrentUserDetails(userDetails));
   }
 
   @GetMapping("/checkrole")
-  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity checkTokenVadality(@AuthenticationPrincipal UserDetails userDetails) {
     try {
       return ok(authServiceImpl.getCurrentUserRoles(userDetails));
@@ -68,7 +64,6 @@ public class AuthController {
   }
 
   @GetMapping("/check/user")
-  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity checkIfUser(@AuthenticationPrincipal UserDetails userDetails) {
     if (authServiceImpl.checkIfUser(userDetails)) {
       return ok(true);
@@ -77,7 +72,6 @@ public class AuthController {
   }
 
   @GetMapping("/check/agent")
-  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity checkIfAgent(@AuthenticationPrincipal UserDetails userDetails) {
     if (authServiceImpl.checkIfAgent(userDetails)) {
       return ok(true);
@@ -86,7 +80,6 @@ public class AuthController {
   }
 
   @GetMapping("/check/Internal")
-  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity checkIfInternal(@AuthenticationPrincipal UserDetails userDetails) {
     if (authServiceImpl.checkIfInternal(userDetails)) {
       return ok(true);
