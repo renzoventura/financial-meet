@@ -22,10 +22,6 @@ public interface AuthService {
 
   ResponseEntity checkTokenVadility(String token);
 
-  Boolean checkIfUser(UserDetails userDetails);
-
-  Boolean checkIfAgent(UserDetails userDetails);
-
-  Boolean checkIfInternal(UserDetails userDetails);
+  Iterable checkRole(UserDetails userDetails);
 
 }

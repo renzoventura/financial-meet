@@ -135,29 +135,12 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public Boolean checkIfUser(UserDetails userDetails) {
+  public Iterable checkRole(UserDetails userDetails) {
     return userDetails
         .getAuthorities()
         .stream()
         .map(GrantedAuthority::getAuthority)
-        .collect(toList()).contains(ACCOUNT_ROLE_USER);
+        .collect(toList());
   }
 
-  @Override
-  public Boolean checkIfAgent(UserDetails userDetails) {
-    return userDetails
-        .getAuthorities()
-        .stream()
-        .map(GrantedAuthority::getAuthority)
-        .collect(toList()).contains(ACCOUNT_ROLE_AGENT);
-  }
-
-  @Override
-  public Boolean checkIfInternal(UserDetails userDetails) {
-    return userDetails
-        .getAuthorities()
-        .stream()
-        .map(GrantedAuthority::getAuthority)
-        .collect(toList()).contains(ACCOUNT_ROLE_INTERNAL);
-  }
 }

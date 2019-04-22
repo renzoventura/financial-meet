@@ -63,27 +63,9 @@ public class AuthController {
     }
   }
 
-  @GetMapping("/check/user")
-  public ResponseEntity checkIfUser(@AuthenticationPrincipal UserDetails userDetails) {
-    if (authServiceImpl.checkIfUser(userDetails)) {
-      return ok(true);
-    }
-    return badRequest().body(false);
-  }
+  @GetMapping("/roles")
+  public ResponseEntity checkRole(@AuthenticationPrincipal UserDetails userDetails) {
+    return ok(authServiceImpl.checkRole(userDetails));
 
-  @GetMapping("/check/agent")
-  public ResponseEntity checkIfAgent(@AuthenticationPrincipal UserDetails userDetails) {
-    if (authServiceImpl.checkIfAgent(userDetails)) {
-      return ok(true);
-    }
-    return badRequest().body(false);
-  }
-
-  @GetMapping("/check/Internal")
-  public ResponseEntity checkIfInternal(@AuthenticationPrincipal UserDetails userDetails) {
-    if (authServiceImpl.checkIfInternal(userDetails)) {
-      return ok(true);
-    }
-    return badRequest().body(false);
   }
 }
