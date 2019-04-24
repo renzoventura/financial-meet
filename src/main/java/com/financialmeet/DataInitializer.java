@@ -42,6 +42,27 @@ public class DataInitializer implements CommandLineRunner {
     user.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user);
 
+
+
+    AccountDTO agent = new AccountDTO();
+    agent.setUsername("agent");
+    agent.setPassword(this.passwordEncoder.encode("password"));
+    agent.setRoles(Collections.singletonList(ACCOUNT_ROLE_AGENT));
+    accountRepository.save(agent);
+
+    AccountDTO internal = new AccountDTO();
+    internal.setUsername("internal");
+    internal.setPassword(this.passwordEncoder.encode("password"));
+    internal.setRoles(Collections.singletonList(ACCOUNT_ROLE_INTERNAL));
+    accountRepository.save(internal);
+
+    AccountDTO user2 = new AccountDTO();
+    user2.setUsername("user2");
+    user2.setPassword(this.passwordEncoder.encode("password"));
+    user2.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
+    accountRepository.save(user2);
+
+
     ApplicationDTO application = new ApplicationDTO();
     application.setOwner(user);
     application.setTitle("I need help with my financial needs!");
@@ -53,17 +74,12 @@ public class DataInitializer implements CommandLineRunner {
     application.setExistingMortgage(true);
     applicationRepository.save(application);
 
-    user = new AccountDTO();
-    user.setUsername("agent");
-    user.setPassword(this.passwordEncoder.encode("password"));
-    user.setRoles(Collections.singletonList(ACCOUNT_ROLE_AGENT));
-    accountRepository.save(user);
+    application = new ApplicationDTO();
+    application.setOwner(user);
+    application.setAgent(agent);
+    application.setTitle("This application has an agent");
+    applicationRepository.save(application);
 
-    user = new AccountDTO();
-    user.setUsername("internal");
-    user.setPassword(this.passwordEncoder.encode("password"));
-    user.setRoles(Collections.singletonList(ACCOUNT_ROLE_INTERNAL));
-    accountRepository.save(user);
 
   }
 

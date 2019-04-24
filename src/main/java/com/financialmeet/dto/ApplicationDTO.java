@@ -54,6 +54,10 @@ public class ApplicationDTO {
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AccountDTO internal;
 
+  public long getId() {
+    return id;
+  }
+
   public String getDescription() {
     return description;
   }
