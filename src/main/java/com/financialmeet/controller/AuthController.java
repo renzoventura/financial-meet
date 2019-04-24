@@ -29,6 +29,21 @@ public class AuthController {
   @Autowired
   private AuthServiceImpl authServiceImpl;
 
+  @GetMapping("/users")
+  public ResponseEntity getAllUsers(){
+    return ok(authServiceImpl.getAllUsers());
+  }
+
+  @GetMapping("/agents")
+  public ResponseEntity getAllAgents(){
+    return ok(authServiceImpl.getAllAgents());
+  }
+
+  @GetMapping("/internals")
+  public ResponseEntity getAllInternals(){
+    return ok(authServiceImpl.getAllInternals());
+  }
+
   @PostMapping("/signin")
   public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO currentAccountDetails){
     return ok(authServiceImpl.signIn(currentAccountDetails));

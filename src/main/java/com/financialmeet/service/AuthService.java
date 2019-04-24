@@ -24,4 +24,10 @@ public interface AuthService {
 
   Iterable checkRole(UserDetails userDetails);
 
+  Iterable<AccountDTO> getAllUsers();
+
+  Iterable<AccountDTO> getAllAgents();
+
+  Iterable<AccountDTO> getAllInternals();
+
 }

@@ -143,4 +143,19 @@ public class AuthServiceImpl implements AuthService {
         .collect(toList());
   }
 
+  @Override
+  public Iterable<AccountDTO> getAllUsers() {
+    return accountRepository.findByRolesIn(ACCOUNT_ROLE_USER);
+  }
+
+  @Override
+  public Iterable<AccountDTO> getAllAgents() {
+    return accountRepository.findByRolesIn(ACCOUNT_ROLE_AGENT);
+  }
+
+  @Override
+  public Iterable<AccountDTO> getAllInternals() {
+    return accountRepository.findByRolesIn(ACCOUNT_ROLE_INTERNAL);
+  }
+
 }
