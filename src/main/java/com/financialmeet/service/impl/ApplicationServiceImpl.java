@@ -97,6 +97,20 @@ public class ApplicationServiceImpl implements ApplicationService {
     return null;
   }
 
+  @Override
+  public ApplicationDTO removeAgentFromApplication(Long applicationId) {
+    ApplicationDTO newApplication = applicationRepository.getOne(applicationId);
+    newApplication.setAgent(null);
+    return applicationRepository.save(newApplication);
+  }
 
+  @Override
+  public Iterable<ApplicationDTO> getApplicationsByAgent(UserDetails userDetails) {
+    Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
 
+    if (currentAccount.isPresent()) {
+      return applicationRepository.findByAgent(currentAccount.get());
+    }
+    return null;
+  }
 }

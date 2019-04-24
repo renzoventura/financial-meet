@@ -34,9 +34,15 @@ public class ApplicationController {
   }
 
   @GetMapping("/current")
-  private ResponseEntity getApplicationByOwnerId(@AuthenticationPrincipal UserDetails userDetails) {
+  private ResponseEntity getApplicationByOwner(@AuthenticationPrincipal UserDetails userDetails) {
     return ok(applicationServiceImpl.getApplicationsByOwner(userDetails));
   }
+
+  @GetMapping("/current/agent")
+  private ResponseEntity getApplicationByAgent(@AuthenticationPrincipal UserDetails userDetails) {
+    return ok(applicationServiceImpl.getApplicationsByAgent(userDetails));
+  }
+
 
   @PostMapping("/create")
   private ResponseEntity createApplication(
@@ -77,5 +83,10 @@ public class ApplicationController {
     } catch (Exception e) {
       return badRequest().body("Something went wrong!");
     }
+  }
+
+  @GetMapping("/{applicationId}/remove/agent")
+  private ResponseEntity removeAgentFromApplication(@PathVariable("applicationId") Long applicationId) {
+    return ok(applicationServiceImpl.removeAgentFromApplication(applicationId));
   }
 }

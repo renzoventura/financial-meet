@@ -18,4 +18,8 @@ public interface ApplicationService {
 
   ApplicationDTO assignInternalToApplication(Long applicationId, Long agentId);
 
+  ApplicationDTO removeAgentFromApplication(Long applicationId);
+
+  Iterable<ApplicationDTO> getApplicationsByAgent (UserDetails userDetails);
+  
 }

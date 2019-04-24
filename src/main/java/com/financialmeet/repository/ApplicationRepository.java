@@ -8,4 +8,7 @@ public interface ApplicationRepository extends JpaRepository<ApplicationDTO, Lon
 
   Iterable<ApplicationDTO> findByOwner(AccountDTO accountDTO);
 
+  Iterable<ApplicationDTO> findByAgent(AccountDTO accountDTO);
+
+
 }
