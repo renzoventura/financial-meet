@@ -1,5 +1,6 @@
 package com.financialmeet.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -38,7 +40,6 @@ public class ApplicationDTO {
 
   private Integer numberOfChildren;
 
-
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "OWNER", nullable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
@@ -53,6 +54,11 @@ public class ApplicationDTO {
   @JoinColumn(name = "INTERNAL")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AccountDTO internal;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "APPLICATIONTYPE")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private ApplicationTypeDTO applicationTypeDTO;
 
   public long getId() {
     return id;
@@ -136,5 +142,13 @@ public class ApplicationDTO {
 
   public void setOwner(AccountDTO owner) {
     this.owner = owner;
+  }
+
+  public ApplicationTypeDTO getApplicationTypeDTO() {
+    return applicationTypeDTO;
+  }
+
+  public void setApplicationTypeDTO(ApplicationTypeDTO applicationTypeDTO) {
+    this.applicationTypeDTO = applicationTypeDTO;
   }
 }

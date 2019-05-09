@@ -6,8 +6,12 @@ import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
 
 import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.ApplicationDTO;
+import com.financialmeet.dto.ApplicationTypeDTO;
+import com.financialmeet.dto.StatusDTO;
 import com.financialmeet.repository.AccountRepository;
 import com.financialmeet.repository.ApplicationRepository;
+import com.financialmeet.repository.ApplicationTypeRepository;
+import com.financialmeet.repository.StatusRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +32,12 @@ public class DataInitializer implements CommandLineRunner {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
+  @Autowired
+  private ApplicationTypeRepository applicationTypeRepository;
+
+  @Autowired
+  private StatusRepository statusRepository;
+
   @Override
   public void run(String... args) {
     ArrayList<AccountDTO> accountDTOS = new ArrayList<>(2);
@@ -42,7 +52,33 @@ public class DataInitializer implements CommandLineRunner {
     user.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user);
 
+    ArrayList<String> statuses = new ArrayList<String>() {
+      {
+        add("ACTIVE");
+        add("DEACTIVED");
+        add("LOCKED");
+        add("DELETED");
+        add("ARCHIVED");
+        add("READY");
+        add("DELIVERED");
+      }
+    };
 
+    StatusDTO status1 = new StatusDTO();
+    status1.setStatusCode("TEST");
+    statusRepository.save(status1);
+
+    ApplicationTypeDTO mortgage = new ApplicationTypeDTO();
+    mortgage.setApplicationTypeTitle("MORTGAGE");
+    applicationTypeRepository.save(mortgage);
+    mortgage.getStatuses().add(status1);
+
+    for(String statusString : statuses) {
+      StatusDTO status = new StatusDTO();
+      status.setStatusCode(statusString);
+      statusRepository.save(status);
+      mortgage.getStatuses().add(status);
+    }
 
     AccountDTO agent = new AccountDTO();
     agent.setUsername("agent");
@@ -62,7 +98,6 @@ public class DataInitializer implements CommandLineRunner {
     user2.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user2);
 
-
     ApplicationDTO application = new ApplicationDTO();
     application.setOwner(user);
     application.setTitle("I need help with my financial needs!");
@@ -72,6 +107,7 @@ public class DataInitializer implements CommandLineRunner {
     application.setNumberOfChildren(3);
     application.setRates(rate);
     application.setExistingMortgage(true);
+    application.setApplicationTypeDTO(mortgage);
     applicationRepository.save(application);
 
     application = new ApplicationDTO();
@@ -79,7 +115,6 @@ public class DataInitializer implements CommandLineRunner {
     application.setAgent(agent);
     application.setTitle("This application has an agent");
     applicationRepository.save(application);
-
 
   }
 
