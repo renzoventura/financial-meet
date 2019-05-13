@@ -15,6 +15,8 @@ import com.financialmeet.repository.StatusRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,8 +45,6 @@ public class DataInitializer implements CommandLineRunner {
     ArrayList<AccountDTO> accountDTOS = new ArrayList<>(2);
 
     String applicationDescription = "This is my application for my financial needs";
-    BigDecimal income = new BigDecimal(5000000.00);
-    BigDecimal rate = new BigDecimal(70.00);
 
     AccountDTO user = new AccountDTO();
     user.setUsername("user");
@@ -52,33 +52,32 @@ public class DataInitializer implements CommandLineRunner {
     user.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user);
 
-    ArrayList<String> statuses = new ArrayList<String>() {
-      {
-        add("ACTIVE");
-        add("DEACTIVED");
-        add("LOCKED");
-        add("DELETED");
-        add("ARCHIVED");
-        add("READY");
-        add("DELIVERED");
-      }
-    };
-
     StatusDTO status1 = new StatusDTO();
-    status1.setStatusCode("TEST");
+    status1.setStatusCode("MORTGAGE_1");
     statusRepository.save(status1);
+    StatusDTO status2 = new StatusDTO();
+    status2.setStatusCode("MORTGAGE_2");
+    statusRepository.save(status2);
+    StatusDTO status3 = new StatusDTO();
+    status3.setStatusCode("MORTGAGE_INSURANCE_1");
+    statusRepository.save(status3);
+    StatusDTO status4 = new StatusDTO();
+    status4.setStatusCode("INSURANCE_1");
+    statusRepository.save(status4);
+    StatusDTO status5 = new StatusDTO();
+    status5.setStatusCode("INSURANCE_2");
+    statusRepository.save(status5);
+
 
     ApplicationTypeDTO mortgage = new ApplicationTypeDTO();
     mortgage.setApplicationTypeTitle("MORTGAGE");
+    mortgage.getStatuses().add(status1);mortgage.getStatuses().add(status2);mortgage.getStatuses().add(status3);
     applicationTypeRepository.save(mortgage);
-    mortgage.getStatuses().add(status1);
 
-    for(String statusString : statuses) {
-      StatusDTO status = new StatusDTO();
-      status.setStatusCode(statusString);
-      statusRepository.save(status);
-      mortgage.getStatuses().add(status);
-    }
+    ApplicationTypeDTO insurance = new ApplicationTypeDTO();
+    insurance.setApplicationTypeTitle("INSURANCE");
+    insurance.getStatuses().add(status3);insurance.getStatuses().add(status4);insurance.getStatuses().add(status5);
+    applicationTypeRepository.save(insurance);
 
     AccountDTO agent = new AccountDTO();
     agent.setUsername("agent");
@@ -102,11 +101,7 @@ public class DataInitializer implements CommandLineRunner {
     application.setOwner(user);
     application.setTitle("I need help with my financial needs!");
 
-    application.setAnnualIncome(income);
     application.setDescription(applicationDescription);
-    application.setNumberOfChildren(3);
-    application.setRates(rate);
-    application.setExistingMortgage(true);
     application.setApplicationTypeDTO(mortgage);
     applicationRepository.save(application);
 

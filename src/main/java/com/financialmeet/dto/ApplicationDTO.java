@@ -1,7 +1,5 @@
 package com.financialmeet.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -30,16 +27,6 @@ public class ApplicationDTO {
 
   private String description;
 
-  private BigDecimal annualIncome;
-
-  private BigDecimal rates;
-
-  private boolean existingMortgage;
-
-  private boolean rent;
-
-  private Integer numberOfChildren;
-
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "OWNER", nullable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
@@ -56,9 +43,22 @@ public class ApplicationDTO {
   private AccountDTO internal;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "APPLICATIONTYPE")
+  @JoinColumn(name = "APPLICATION_TYPE")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private ApplicationTypeDTO applicationTypeDTO;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "APPLICATION_STATUS")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private StatusDTO statusDTO;
+
+  public StatusDTO getStatusDTO() {
+    return statusDTO;
+  }
+
+  public void setStatusDTO(StatusDTO statusDTO) {
+    this.statusDTO = statusDTO;
+  }
 
   public long getId() {
     return id;
@@ -70,46 +70,6 @@ public class ApplicationDTO {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public BigDecimal getAnnualIncome() {
-    return annualIncome;
-  }
-
-  public void setAnnualIncome(BigDecimal annualIncome) {
-    this.annualIncome = annualIncome;
-  }
-
-  public BigDecimal getRates() {
-    return rates;
-  }
-
-  public void setRates(BigDecimal rates) {
-    this.rates = rates;
-  }
-
-  public boolean hasExistingMortgage() {
-    return existingMortgage;
-  }
-
-  public void setExistingMortgage(boolean existingMortgage) {
-    this.existingMortgage = existingMortgage;
-  }
-
-  public boolean isRent() {
-    return rent;
-  }
-
-  public void setRent(boolean rent) {
-    this.rent = rent;
-  }
-
-  public Integer getNumberOfChildren() {
-    return numberOfChildren;
-  }
-
-  public void setNumberOfChildren(Integer numberOfChildren) {
-    this.numberOfChildren = numberOfChildren;
   }
 
   public AccountDTO getAgent() {

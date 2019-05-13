@@ -7,8 +7,10 @@ import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
 
 import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.ApplicationDTO;
+import com.financialmeet.dto.StatusDTO;
 import com.financialmeet.repository.AccountRepository;
 import com.financialmeet.repository.ApplicationRepository;
+import com.financialmeet.repository.StatusRepository;
 import com.financialmeet.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +24,9 @@ public class ApplicationServiceImpl implements ApplicationService {
   @Autowired private ApplicationRepository applicationRepository;
 
   @Autowired private AccountRepository accountRepository;
+
+  @Autowired
+  private StatusRepository statusRepository;
 
   @Override
   public Iterable<ApplicationDTO> getAllApplications() {
@@ -112,5 +117,17 @@ public class ApplicationServiceImpl implements ApplicationService {
       return applicationRepository.findByAgent(currentAccount.get());
     }
     return null;
+  }
+
+  @Override
+  public ApplicationDTO assignStatusToApplication(Long applicationId, StatusDTO statusDTO) {
+
+    Optional<StatusDTO> newStatus = statusRepository.findById(statusDTO.getId());
+   // Optional<StatusDTO> app = applicationRepository.findById(applicationId);
+
+    //if (newStatus.isPresent() && ) {
+
+    //}/
+return null;
   }
 }

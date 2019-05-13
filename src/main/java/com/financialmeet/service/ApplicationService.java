@@ -2,6 +2,7 @@ package com.financialmeet.service;
 
 
 import com.financialmeet.dto.ApplicationDTO;
+import com.financialmeet.dto.StatusDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface ApplicationService {
@@ -14,12 +15,13 @@ public interface ApplicationService {
 
   ApplicationDTO createApplication(ApplicationDTO applicationDTO, UserDetails userDetails);
 
-  ApplicationDTO assignAgentToApplication (Long applicationId, Long agentId);
+  ApplicationDTO assignAgentToApplication(Long applicationId, Long agentId);
 
   ApplicationDTO assignInternalToApplication(Long applicationId, Long agentId);
 
   ApplicationDTO removeAgentFromApplication(Long applicationId);
 
   Iterable<ApplicationDTO> getApplicationsByAgent (UserDetails userDetails);
-  
+
+  ApplicationDTO assignStatusToApplication(Long applicationId, StatusDTO statusDTO);
 }
