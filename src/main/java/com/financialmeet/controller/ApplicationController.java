@@ -89,4 +89,26 @@ public class ApplicationController {
   private ResponseEntity removeAgentFromApplication(@PathVariable("applicationId") Long applicationId) {
     return ok(applicationServiceImpl.removeAgentFromApplication(applicationId));
   }
+
+  @PostMapping("/create/{applicationType}")
+  private ResponseEntity createApplicationWithType(@PathVariable String applicationType,
+      @RequestBody ApplicationDTO applicationDTO,
+      @AuthenticationPrincipal UserDetails userDetails) {
+    try {
+      return ok(applicationServiceImpl.createApplicationWithType(applicationType, applicationDTO, userDetails));
+    } catch (Exception e) {
+      return badRequest().body("application creation failed");
+    }
+  }
+
+  @PostMapping("/progress/{applicationId}")
+  private ResponseEntity progressApplicationStatus(@PathVariable("applicationId") Long applicationId) {
+    try {
+      return ok(applicationServiceImpl.progressApplicationStatus(applicationId));
+    } catch (Exception e) {
+      return badRequest().body("application creation failed");
+    }
+  }
+
+
 }

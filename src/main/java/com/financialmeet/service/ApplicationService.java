@@ -23,5 +23,8 @@ public interface ApplicationService {
 
   Iterable<ApplicationDTO> getApplicationsByAgent (UserDetails userDetails);
 
-  ApplicationDTO assignStatusToApplication(Long applicationId, StatusDTO statusDTO);
+  ApplicationDTO createApplicationWithType(String applicationType, ApplicationDTO applicationDTO, UserDetails userDetails);
+
+  ApplicationDTO progressApplicationStatus(Long applicationId);
+
 }

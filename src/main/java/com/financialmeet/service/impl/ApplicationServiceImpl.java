@@ -7,9 +7,11 @@ import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
 
 import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.ApplicationDTO;
+import com.financialmeet.dto.ApplicationTypeDTO;
 import com.financialmeet.dto.StatusDTO;
 import com.financialmeet.repository.AccountRepository;
 import com.financialmeet.repository.ApplicationRepository;
+import com.financialmeet.repository.ApplicationTypeRepository;
 import com.financialmeet.repository.StatusRepository;
 import com.financialmeet.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class ApplicationServiceImpl implements ApplicationService {
   @Autowired private ApplicationRepository applicationRepository;
 
   @Autowired private AccountRepository accountRepository;
+
+  @Autowired private ApplicationTypeRepository applicationTypeRepository;
 
   @Autowired
   private StatusRepository statusRepository;
@@ -120,14 +124,43 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public ApplicationDTO assignStatusToApplication(Long applicationId, StatusDTO statusDTO) {
+  public ApplicationDTO createApplicationWithType(
+      String applicationType, ApplicationDTO applicationDTO, UserDetails userDetails) {
 
-    Optional<StatusDTO> newStatus = statusRepository.findById(statusDTO.getId());
-   // Optional<StatusDTO> app = applicationRepository.findById(applicationId);
+    Optional<AccountDTO> currentAccount =
+        accountRepository.findByUsername(userDetails.getUsername());
 
-    //if (newStatus.isPresent() && ) {
+    Optional<ApplicationTypeDTO> currentApplicationType =
+        applicationTypeRepository.findByApplicationTypeTitle(applicationType.toUpperCase());
 
-    //}/
-return null;
+    if (currentAccount.isPresent() && currentAccount.get().getRoles().contains(ACCOUNT_ROLE_USER)) {
+      if (currentApplicationType.isPresent())
+        applicationDTO.setApplicationTypeDTO(currentApplicationType.get());
+        applicationDTO.setStatusDTO(currentApplicationType.get().getStatuses().get(0)); //set first
+        applicationDTO.setOwner(currentAccount.get());
+        applicationRepository.save(applicationDTO);
+        return applicationDTO;
+      }
+    return null;
+  }
+
+  @Override
+  public ApplicationDTO progressApplicationStatus(Long applicationId) {
+    Optional<ApplicationDTO> currentApplication = applicationRepository.findById(applicationId);
+    if(currentApplication.isPresent()) {
+      StatusDTO currentApplicationStatus = currentApplication.get().getStatusDTO();
+      ApplicationTypeDTO currentApplicationType = currentApplication.get().getApplicationTypeDTO();
+
+      int currentProgressIndex = currentApplicationType.getStatuses().indexOf(currentApplicationStatus);
+
+      if (currentApplicationType.getStatuses().contains(currentApplicationStatus) &&
+          currentProgressIndex != currentApplicationType.getStatuses().size()) {
+        currentApplication.get().setStatusDTO(currentApplicationType.getStatuses().get(currentProgressIndex + 1));
+
+        applicationRepository.save(currentApplication.get());
+        return currentApplication.get();
+      }
+    }
+    return null;
   }
 }

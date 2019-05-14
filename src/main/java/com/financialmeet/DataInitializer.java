@@ -59,7 +59,7 @@ public class DataInitializer implements CommandLineRunner {
     status2.setStatusCode("MORTGAGE_2");
     statusRepository.save(status2);
     StatusDTO status3 = new StatusDTO();
-    status3.setStatusCode("MORTGAGE_INSURANCE_1");
+    status3.setStatusCode("MORTGAGE_3");
     statusRepository.save(status3);
     StatusDTO status4 = new StatusDTO();
     status4.setStatusCode("INSURANCE_1");
@@ -67,16 +67,23 @@ public class DataInitializer implements CommandLineRunner {
     StatusDTO status5 = new StatusDTO();
     status5.setStatusCode("INSURANCE_2");
     statusRepository.save(status5);
+    StatusDTO status6 = new StatusDTO();
+    status6.setStatusCode("INSURANCE_3");
+    statusRepository.save(status6);
 
 
     ApplicationTypeDTO mortgage = new ApplicationTypeDTO();
     mortgage.setApplicationTypeTitle("MORTGAGE");
-    mortgage.getStatuses().add(status1);mortgage.getStatuses().add(status2);mortgage.getStatuses().add(status3);
+    mortgage.getStatuses().add(status1);
+    mortgage.getStatuses().add(status2);
+    mortgage.getStatuses().add(status3);
     applicationTypeRepository.save(mortgage);
 
     ApplicationTypeDTO insurance = new ApplicationTypeDTO();
     insurance.setApplicationTypeTitle("INSURANCE");
-    insurance.getStatuses().add(status3);insurance.getStatuses().add(status4);insurance.getStatuses().add(status5);
+    insurance.getStatuses().add(status4);
+    insurance.getStatuses().add(status5);
+    insurance.getStatuses().add(status6);
     applicationTypeRepository.save(insurance);
 
     AccountDTO agent = new AccountDTO();
