@@ -1,5 +1,6 @@
 package com.financialmeet.dto;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,50 +15,47 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name = "APPLICATIONS")
+@Table(name = "applications")
 public class ApplicationDTO {
 
   @Id
+  @Column(name = "application_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   @NotNull
   private long id;
 
   @NotEmpty
+  @Column(name = "application_title")
   private String title;
 
+  @Column(name = "application_description")
   private String description;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "OWNER", nullable = false)
+  @JoinColumn(name = "application_owner", nullable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AccountDTO owner;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "AGENT")
+  @JoinColumn(name = "application_agent")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AccountDTO agent;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "INTERNAL")
+  @JoinColumn(name = "application_internal")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AccountDTO internal;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "APPLICATION_TYPE")
-  @OnDelete(action = OnDeleteAction.CASCADE)
-  private ApplicationTypeDTO applicationTypeDTO;
+  private String applicationType;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "APPLICATION_STATUS")
-  @OnDelete(action = OnDeleteAction.CASCADE)
-  private StatusDTO statusDTO;
+  private String status;
 
-  public StatusDTO getStatusDTO() {
-    return statusDTO;
+  public String getStatus() {
+    return status;
   }
 
-  public void setStatusDTO(StatusDTO statusDTO) {
-    this.statusDTO = statusDTO;
+  public void setStatus(String status) {
+    this.status = status;
   }
 
   public long getId() {
@@ -104,11 +102,11 @@ public class ApplicationDTO {
     this.owner = owner;
   }
 
-  public ApplicationTypeDTO getApplicationTypeDTO() {
-    return applicationTypeDTO;
+  public String getApplicationType() {
+    return applicationType;
   }
 
-  public void setApplicationTypeDTO(ApplicationTypeDTO applicationTypeDTO) {
-    this.applicationTypeDTO = applicationTypeDTO;
+  public void setApplicationType(String applicationType) {
+    this.applicationType = applicationType;
   }
 }

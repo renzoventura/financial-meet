@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ApplicationTypeRepository extends JpaRepository<ApplicationTypeDTO, Long> {
 
-  Optional<ApplicationTypeDTO> findByApplicationTypeTitle(String username);
+  Optional<ApplicationTypeDTO> findByApplicationTypeTitle(String applicationTypeTitle);
 
+  Optional<ApplicationTypeDTO> findByApplicationTypeCode(String applicationTypeCode);
 
 }

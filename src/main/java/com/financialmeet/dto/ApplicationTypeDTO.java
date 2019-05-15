@@ -11,12 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "APP_TYPE")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class ApplicationTypeDTO {
 
@@ -24,9 +22,14 @@ public class ApplicationTypeDTO {
   public static final String APP_TYPE_INSURANCE = "INSURANCE";
 
   @Id
+  @Column(name = "app_type_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   @NotNull
   private long id;
+
+  @NotEmpty
+  @Column(name = "app_type_code")
+  private String applicationTypeCode;
 
   @NotEmpty
   @Column(name = "app_type_title")
@@ -34,9 +37,17 @@ public class ApplicationTypeDTO {
 
   @OneToMany(fetch = FetchType.LAZY)
   @NotNull
+  @Column(name = "app_type_statuses")
   private List<StatusDTO> statuses = new ArrayList<>();
 
-  @JsonIgnore
+  public String getApplicationTypeCode() {
+    return applicationTypeCode;
+  }
+
+  public void setApplicationTypeCode(String applicationTypeCode) {
+    this.applicationTypeCode = applicationTypeCode;
+  }
+
   public List<StatusDTO> getStatuses() {
     return statuses;
   }

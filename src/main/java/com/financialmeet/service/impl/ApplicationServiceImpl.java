@@ -135,8 +135,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     if (currentAccount.isPresent() && currentAccount.get().getRoles().contains(ACCOUNT_ROLE_USER)) {
       if (currentApplicationType.isPresent())
-        applicationDTO.setApplicationTypeDTO(currentApplicationType.get());
-        applicationDTO.setStatusDTO(currentApplicationType.get().getStatuses().get(0)); //set first
+        applicationDTO.setApplicationType(currentApplicationType.get().getApplicationTypeCode());
+        applicationDTO.setStatus(currentApplicationType.get().getStatuses().get(0).getStatusCode()); //set first
         applicationDTO.setOwner(currentAccount.get());
         applicationRepository.save(applicationDTO);
         return applicationDTO;
@@ -144,23 +144,27 @@ public class ApplicationServiceImpl implements ApplicationService {
     return null;
   }
 
+  //lmao this code is so shit please fix it later im so tired
   @Override
   public ApplicationDTO progressApplicationStatus(Long applicationId) {
     Optional<ApplicationDTO> currentApplication = applicationRepository.findById(applicationId);
     if(currentApplication.isPresent()) {
-      StatusDTO currentApplicationStatus = currentApplication.get().getStatusDTO();
-      ApplicationTypeDTO currentApplicationType = currentApplication.get().getApplicationTypeDTO();
+      Optional<StatusDTO> currentApplicationStatus = statusRepository.findByStatusCode(currentApplication.get().getStatus());
+      Optional<ApplicationTypeDTO> currentApplicationType = applicationTypeRepository.findByApplicationTypeCode(currentApplication.get().getApplicationType());
 
-      int currentProgressIndex = currentApplicationType.getStatuses().indexOf(currentApplicationStatus);
+      if(currentApplicationStatus.isPresent() && currentApplicationType.isPresent() ) {
+      int currentProgressIndex = currentApplicationType.get().getStatuses().indexOf(currentApplicationStatus.get());
 
-      if (currentApplicationType.getStatuses().contains(currentApplicationStatus) &&
-          currentProgressIndex != currentApplicationType.getStatuses().size()) {
-        currentApplication.get().setStatusDTO(currentApplicationType.getStatuses().get(currentProgressIndex + 1));
+      if (currentApplicationType.get().getStatuses().contains(currentApplicationStatus.get()) &&
+          currentProgressIndex != currentApplicationType.get().getStatuses().size()) {
+        currentApplication.get().setStatus(currentApplicationType.get().getStatuses().get(currentProgressIndex + 1).getStatusCode());
 
         applicationRepository.save(currentApplication.get());
         return currentApplication.get();
       }
+      }
     }
     return null;
   }
+
 }

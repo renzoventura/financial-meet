@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "STATUS")
+@Table(name = "status")
 public class StatusDTO {
 
   @Id
@@ -19,6 +19,17 @@ public class StatusDTO {
 
   @NotEmpty
   private String statusCode;
+
+  @NotEmpty
+  private String statusTitle;
+
+  public String getStatusTitle() {
+    return statusTitle;
+  }
+
+  public void setStatusTitle(String statusTitle) {
+    this.statusTitle = statusTitle;
+  }
 
   public long getId() {
     return Id;

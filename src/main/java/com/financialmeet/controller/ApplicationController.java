@@ -106,7 +106,7 @@ public class ApplicationController {
     try {
       return ok(applicationServiceImpl.progressApplicationStatus(applicationId));
     } catch (Exception e) {
-      return badRequest().body("application creation failed");
+      return badRequest().body("This application cannot progress any further");
     }
   }
 
