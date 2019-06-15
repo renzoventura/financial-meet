@@ -1,6 +1,5 @@
 package com.financialmeet.service.impl;
 
-
 import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_AGENT;
 import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_INTERNAL;
 import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
@@ -14,7 +13,9 @@ import com.financialmeet.repository.ApplicationRepository;
 import com.financialmeet.repository.ApplicationTypeRepository;
 import com.financialmeet.repository.StatusRepository;
 import com.financialmeet.service.ApplicationService;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +30,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Autowired private ApplicationTypeRepository applicationTypeRepository;
 
-  @Autowired
-  private StatusRepository statusRepository;
+  @Autowired private StatusRepository statusRepository;
 
   @Override
-  public Iterable<ApplicationDTO> getAllApplications() {
-    return applicationRepository.findAll();
+  public Iterable<ApplicationDTO> getAllApplications(
+      String applicationTitle, Integer page, Integer size) {
+
+    return applicationRepository.findAllByTitleContaining(applicationTitle, PageRequest.of(page, size));
   }
 
   @Override
@@ -47,19 +49,10 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public Iterable<ApplicationDTO> getApplicationsByOwner(UserDetails userDetails) {
-    Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
-
-    if (currentAccount.isPresent()) {
-      return applicationRepository.findByOwner(currentAccount.get());
-    }
-    return null;
-  }
-
-  @Override
   public ApplicationDTO createApplication(ApplicationDTO applicationDTO, UserDetails userDetails) {
 
-    Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
+    Optional<AccountDTO> currentAccount =
+        accountRepository.findByUsername(userDetails.getUsername());
 
     if (currentAccount.isPresent()) {
       if (currentAccount.get().getRoles().contains(ACCOUNT_ROLE_USER)) {
@@ -114,11 +107,14 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public Iterable<ApplicationDTO> getApplicationsByAgent(UserDetails userDetails) {
-    Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
+  public Iterable<ApplicationDTO> getApplicationsByAgent(
+      UserDetails userDetails, String applicationTitle, Integer page, Integer size) {
+    Optional<AccountDTO> currentAccount =
+        accountRepository.findByUsername(userDetails.getUsername());
 
     if (currentAccount.isPresent()) {
-      return applicationRepository.findByAgent(currentAccount.get());
+      return applicationRepository.findByAgentAndTitleContaining(
+          currentAccount.get(), applicationTitle, PageRequest.of(page, size));
     }
     return null;
   }
@@ -136,35 +132,60 @@ public class ApplicationServiceImpl implements ApplicationService {
     if (currentAccount.isPresent() && currentAccount.get().getRoles().contains(ACCOUNT_ROLE_USER)) {
       if (currentApplicationType.isPresent())
         applicationDTO.setApplicationType(currentApplicationType.get().getApplicationTypeCode());
-        applicationDTO.setStatus(currentApplicationType.get().getStatuses().get(0).getStatusCode()); //set first
-        applicationDTO.setOwner(currentAccount.get());
-        applicationRepository.save(applicationDTO);
-        return applicationDTO;
-      }
+      applicationDTO.setStatus(
+          currentApplicationType.get().getStatuses().get(0).getStatusCode()); // set first
+      applicationDTO.setOwner(currentAccount.get());
+      applicationDTO.setDateCreated(LocalDate.now());
+      applicationRepository.save(applicationDTO);
+      return applicationDTO;
+    }
     return null;
   }
 
-  //lmao this code is so shit please fix it later im so tired
+  // lmao this code is so shit please fix it later im so tired
   @Override
   public ApplicationDTO progressApplicationStatus(Long applicationId) {
     Optional<ApplicationDTO> currentApplication = applicationRepository.findById(applicationId);
-    if(currentApplication.isPresent()) {
-      Optional<StatusDTO> currentApplicationStatus = statusRepository.findByStatusCode(currentApplication.get().getStatus());
-      Optional<ApplicationTypeDTO> currentApplicationType = applicationTypeRepository.findByApplicationTypeCode(currentApplication.get().getApplicationType());
+    if (currentApplication.isPresent()) {
+      Optional<StatusDTO> currentApplicationStatus =
+          statusRepository.findByStatusCode(currentApplication.get().getStatus());
+      Optional<ApplicationTypeDTO> currentApplicationType =
+          applicationTypeRepository.findByApplicationTypeCode(
+              currentApplication.get().getApplicationType());
 
-      if(currentApplicationStatus.isPresent() && currentApplicationType.isPresent() ) {
-      int currentProgressIndex = currentApplicationType.get().getStatuses().indexOf(currentApplicationStatus.get());
+      if (currentApplicationStatus.isPresent() && currentApplicationType.isPresent()) {
+        int currentProgressIndex =
+            currentApplicationType.get().getStatuses().indexOf(currentApplicationStatus.get());
 
-      if (currentApplicationType.get().getStatuses().contains(currentApplicationStatus.get()) &&
-          currentProgressIndex != currentApplicationType.get().getStatuses().size()) {
-        currentApplication.get().setStatus(currentApplicationType.get().getStatuses().get(currentProgressIndex + 1).getStatusCode());
+        if (currentApplicationType.get().getStatuses().contains(currentApplicationStatus.get())
+            && currentProgressIndex != currentApplicationType.get().getStatuses().size()) {
+          currentApplication
+              .get()
+              .setStatus(
+                  currentApplicationType
+                      .get()
+                      .getStatuses()
+                      .get(currentProgressIndex + 1)
+                      .getStatusCode());
 
-        applicationRepository.save(currentApplication.get());
-        return currentApplication.get();
-      }
+          applicationRepository.save(currentApplication.get());
+          return currentApplication.get();
+        }
       }
     }
     return null;
   }
 
+  @Override
+  public Iterable<ApplicationDTO> getApplicationsByOwner(
+      UserDetails userDetails, String applicationTitle, Integer page, Integer size) {
+    Optional<AccountDTO> currentAccount =
+        accountRepository.findByUsername(userDetails.getUsername());
+
+    if (currentAccount.isPresent()) {
+      return applicationRepository.findByOwnerAndTitleContaining(
+          currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+    }
+    return null;
+  }
 }

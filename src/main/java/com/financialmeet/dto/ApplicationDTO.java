@@ -1,5 +1,7 @@
 package com.financialmeet.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,6 +51,9 @@ public class ApplicationDTO {
   private String applicationType;
 
   private String status;
+
+  @JsonFormat(pattern="dd-MM-yyyy")
+  private LocalDate dateCreated;
 
   public String getStatus() {
     return status;
@@ -108,5 +113,13 @@ public class ApplicationDTO {
 
   public void setApplicationType(String applicationType) {
     this.applicationType = applicationType;
+  }
+
+  public LocalDate getDateCreated() {
+    return dateCreated;
+  }
+
+  public void setDateCreated(LocalDate dateCreated) {
+    this.dateCreated = dateCreated;
   }
 }

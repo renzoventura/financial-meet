@@ -12,8 +12,10 @@ import com.financialmeet.repository.AccountRepository;
 import com.financialmeet.repository.ApplicationRepository;
 import com.financialmeet.repository.ApplicationTypeRepository;
 import com.financialmeet.repository.StatusRepository;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -112,7 +114,6 @@ public class DataInitializer implements CommandLineRunner {
     ApplicationDTO application = new ApplicationDTO();
     application.setOwner(user);
     application.setTitle("I need help with my financial needs!");
-
     application.setDescription(applicationDescription);
     application.setApplicationType(mortgage.getApplicationTypeCode());
     applicationRepository.save(application);
@@ -122,6 +123,20 @@ public class DataInitializer implements CommandLineRunner {
     application.setAgent(agent);
     application.setTitle("This application has an agent");
     applicationRepository.save(application);
+
+    for(int i = 0; i < 50; i++) {
+      application = new ApplicationDTO();
+      application.setOwner(user2);
+      application.setTitle(String.format("%d Application", i));
+      application.setDescription(String.format("%d Application Description", i));
+/*      long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
+      long maxDay = LocalDate.of(2015, 12, 31).toEpochDay();
+      long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+      LocalDate randomDate = LocalDate.ofEpochDay(randomDay);*/
+      application.setDateCreated(LocalDate.now());
+      application.setStatus("MORT_1");
+      applicationRepository.save(application);
+    }
 
   }
 
