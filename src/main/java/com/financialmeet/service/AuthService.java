@@ -30,4 +30,6 @@ public interface AuthService {
 
   Iterable<AccountDTO> getAllInternals();
 
+  ResponseEntity getAgent(Long accountId);
+
 }

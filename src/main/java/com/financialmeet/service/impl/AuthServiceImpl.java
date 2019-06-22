@@ -5,6 +5,7 @@ import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_INTERNAL;
 import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.financialmeet.dto.AccountDTO;
@@ -158,4 +159,15 @@ public class AuthServiceImpl implements AuthService {
     return accountRepository.findByRolesIn(ACCOUNT_ROLE_INTERNAL);
   }
 
+  @Override
+  public ResponseEntity<?> getAgent(Long accountId) {
+    Optional<AccountDTO> account = accountRepository.findById(accountId);
+    if (account.isPresent()) {
+      AccountDTO accountFound = account.get();
+      if (accountFound.getRoles().contains(ACCOUNT_ROLE_AGENT)) {
+        return ok(accountFound);
+      }
+    }
+      return badRequest().body("Account cannot be found");
+  }
 }
