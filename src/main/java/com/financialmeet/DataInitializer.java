@@ -3,6 +3,7 @@ package com.financialmeet;
 import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_AGENT;
 import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_INTERNAL;
 import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
+import static java.time.LocalDate.ofEpochDay;
 
 import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.ApplicationDTO;
@@ -12,6 +13,7 @@ import com.financialmeet.repository.AccountRepository;
 import com.financialmeet.repository.ApplicationRepository;
 import com.financialmeet.repository.ApplicationTypeRepository;
 import com.financialmeet.repository.StatusRepository;
+import com.financialmeet.service.impl.ApplicationServiceImpl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,8 +45,6 @@ public class DataInitializer implements CommandLineRunner {
   public void run(String... args) {
     ArrayList<AccountDTO> accountDTOS = new ArrayList<>(2);
 
-    String applicationDescription = "This is my application for my financial needs";
-
     AccountDTO user = new AccountDTO();
     user.setUsername("user");
     user.setPassword(this.passwordEncoder.encode("password"));
@@ -52,16 +52,16 @@ public class DataInitializer implements CommandLineRunner {
     accountRepository.save(user);
 
     StatusDTO status1 = new StatusDTO();
-    status1.setStatusCode("MORT_1");
-    status1.setStatusTitle("MORTGAGE_1");
+    status1.setStatusCode("CREATED");
+    status1.setStatusTitle("CREATED_TITLE");
     statusRepository.save(status1);
     StatusDTO status2 = new StatusDTO();
-    status2.setStatusCode("MORT_2");
-    status2.setStatusTitle("MORTGAGE_2");
+    status2.setStatusCode("ASSIGNED");
+    status2.setStatusTitle("ASSIGNED_TITLE");
     statusRepository.save(status2);
     StatusDTO status3 = new StatusDTO();
-    status3.setStatusCode("MORT_3");
-    status3.setStatusTitle("MORTGAGE_3");
+    status3.setStatusCode("DONE");
+    status3.setStatusTitle("DONE_TITLE");
     statusRepository.save(status3);
     StatusDTO status4 = new StatusDTO();
     status4.setStatusCode("INSU_1");
@@ -111,32 +111,37 @@ public class DataInitializer implements CommandLineRunner {
     user2.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user2);
 
-    ApplicationDTO application = new ApplicationDTO();
-    application.setOwner(user);
-    application.setTitle("I need help with my financial needs!");
-    application.setDescription(applicationDescription);
-    application.setApplicationType(mortgage.getApplicationTypeCode());
-    applicationRepository.save(application);
+    ApplicationDTO application;
 
-    application = new ApplicationDTO();
-    application.setOwner(user);
-    application.setAgent(agent);
-    application.setTitle("This application has an agent");
-    applicationRepository.save(application);
-
-    for(int i = 0; i < 50; i++) {
+    //with agent
+    for(int i = 0; i < 10; i++) {
       application = new ApplicationDTO();
-      application.setOwner(user2);
+      application.setOwner(user);
       application.setTitle(String.format("%d Application", i));
       application.setDescription(String.format("%d Application Description", i));
-/*      long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
-      long maxDay = LocalDate.of(2015, 12, 31).toEpochDay();
-      long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
-      LocalDate randomDate = LocalDate.ofEpochDay(randomDay);*/
-      application.setDateCreated(LocalDate.now());
-      application.setStatus("MORT_1");
+      long minDay = LocalDate.of(2019, 1, 1).toEpochDay();
+      long randomDay = ThreadLocalRandom.current().nextLong(minDay, LocalDate.now().toEpochDay());
+      application.setDateCreated(ofEpochDay(randomDay));
+      application.setApplicationType(mortgage.getApplicationTypeCode());
+      application.setStatus("CREATED");
+      application.setAgent(agent);
       applicationRepository.save(application);
     }
+
+    //no agent
+    for(int i = 0; i < 10; i++) {
+      application = new ApplicationDTO();
+      application.setOwner(user2);
+      application.setTitle(String.format("Application Number: %d", i));
+      application.setDescription(String.format("Application Description: %d ", i));
+      long minDay = LocalDate.of(2019, 1, 1).toEpochDay();
+      long randomDay = ThreadLocalRandom.current().nextLong(minDay, LocalDate.now().toEpochDay());
+      application.setDateCreated(ofEpochDay(randomDay));
+      application.setApplicationType(mortgage.getApplicationTypeCode());
+      application.setStatus("CREATED");
+      applicationRepository.save(application);
+    }
+
 
   }
 
