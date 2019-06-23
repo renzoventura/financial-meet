@@ -24,6 +24,9 @@ import java.util.Optional;
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 
+  private final String ASCENDING = "ASC";
+  private final String DESCENDING = "DESC";
+
   @Autowired private ApplicationRepository applicationRepository;
 
   @Autowired private AccountRepository accountRepository;
@@ -34,9 +37,19 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getAllApplications(
-      String applicationTitle, Integer page, Integer size) {
+      String applicationTitle, Integer page, Integer size, String order) {
 
-    return applicationRepository.findAllByTitleContaining(applicationTitle, PageRequest.of(page, size));
+    if (!order.isEmpty()) {
+      if (order.equalsIgnoreCase(DESCENDING)) {
+        return applicationRepository.findAllByTitleContainingOrderByDateCreatedDesc(
+            applicationTitle, PageRequest.of(page, size));
+      } else {
+        return applicationRepository.findAllByTitleContainingOrderByDateCreatedAsc(
+            applicationTitle, PageRequest.of(page, size));
+      }
+    }
+    return null;
+
   }
 
   @Override
@@ -108,13 +121,18 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getApplicationsByAgent(
-      UserDetails userDetails, String applicationTitle, Integer page, Integer size) {
+      UserDetails userDetails, String applicationTitle, Integer page, Integer size, String order) {
     Optional<AccountDTO> currentAccount =
         accountRepository.findByUsername(userDetails.getUsername());
+    if (currentAccount.isPresent() && !order.isEmpty()) {
 
-    if (currentAccount.isPresent()) {
-      return applicationRepository.findByAgentAndTitleContaining(
-          currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+      if (order.equalsIgnoreCase(DESCENDING)) {
+        return applicationRepository.findByAgentAndTitleContainingOrderByDateCreatedDesc(
+            currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+      } else {
+        return applicationRepository.findByAgentAndTitleContainingOrderByDateCreatedAsc(
+            currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+      }
     }
     return null;
   }
@@ -178,13 +196,18 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getApplicationsByOwner(
-      UserDetails userDetails, String applicationTitle, Integer page, Integer size) {
+      UserDetails userDetails, String applicationTitle, Integer page, Integer size, String order) {
     Optional<AccountDTO> currentAccount =
         accountRepository.findByUsername(userDetails.getUsername());
+    if (currentAccount.isPresent() && !order.isEmpty()) {
 
-    if (currentAccount.isPresent()) {
-      return applicationRepository.findByOwnerAndTitleContaining(
-          currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+      if (order.equalsIgnoreCase(DESCENDING)) {
+        return applicationRepository.findByOwnerAndTitleContainingOrderByDateCreatedDesc(
+            currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+      } else {
+        return applicationRepository.findByOwnerAndTitleContainingOrderByDateCreatedAsc(
+            currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+      }
     }
     return null;
   }
