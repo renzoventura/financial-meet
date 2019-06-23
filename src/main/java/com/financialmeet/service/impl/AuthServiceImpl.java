@@ -170,4 +170,16 @@ public class AuthServiceImpl implements AuthService {
     }
       return badRequest().body("Account cannot be found");
   }
+
+
+  @Override
+  public ResponseEntity getCurrentAccountDetails(@AuthenticationPrincipal UserDetails userDetails) {
+    Optional<AccountDTO> currentAccount = accountRepository.findByUsername(userDetails.getUsername());
+    if (currentAccount.isPresent()) {
+      return ok(currentAccount.get());
+    }
+    return badRequest().body("Account does not exist");
+
+
+  }
 }

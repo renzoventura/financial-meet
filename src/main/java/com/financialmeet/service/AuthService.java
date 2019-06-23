@@ -32,4 +32,6 @@ public interface AuthService {
 
   ResponseEntity getAgent(Long accountId);
 
+  ResponseEntity getCurrentAccountDetails(UserDetails userDetails);
+
 }

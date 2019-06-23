@@ -87,6 +87,10 @@ public class AuthController {
   @GetMapping("/account/{id}")
   public ResponseEntity getAgentById(@PathVariable Long id) {
     return ok(authServiceImpl.getAgent(id));
+  }
 
+  @GetMapping("/account/me")
+  public ResponseEntity getAgentById(@AuthenticationPrincipal UserDetails userDetails) {
+    return ok(authServiceImpl.getCurrentAccountDetails(userDetails));
   }
 }
