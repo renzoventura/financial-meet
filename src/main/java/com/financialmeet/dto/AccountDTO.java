@@ -53,6 +53,98 @@ public class AccountDTO implements UserDetails {
     return this.roles.stream().map(SimpleGrantedAuthority::new).collect(toList());
   }
 
+  @NotEmpty
+  private String firstName;
+
+  @NotEmpty
+  private String lastName;
+
+  private String phoneNumber;
+
+  private String mobile;
+
+  private String occupation;
+
+  private String suburb;
+
+  private String email;
+
+  private String annualIncome;
+
+  private String currentLoan;
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getMobile() {
+    return mobile;
+  }
+
+  public void setMobile(String mobile) {
+    this.mobile = mobile;
+  }
+
+  public String getOccupation() {
+    return occupation;
+  }
+
+  public void setOccupation(String occupation) {
+    this.occupation = occupation;
+  }
+
+  public String getSuburb() {
+    return suburb;
+  }
+
+  public void setSuburb(String suburb) {
+    this.suburb = suburb;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getAnnualIncome() {
+    return annualIncome;
+  }
+
+  public void setAnnualIncome(String annualIncome) {
+    this.annualIncome = annualIncome;
+  }
+
+  public String getCurrentLoan() {
+    return currentLoan;
+  }
+
+  public void setCurrentLoan(String currentLoan) {
+    this.currentLoan = currentLoan;
+  }
+
   @JsonIgnore
   public List<String> getRoles() {
     return roles;

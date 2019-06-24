@@ -47,9 +47,19 @@ public class DataInitializer implements CommandLineRunner {
 
     AccountDTO user = new AccountDTO();
     user.setUsername("user");
+    user.setFirstName("Kobe");
+    user.setLastName("Bryant");
     user.setPassword(this.passwordEncoder.encode("password"));
+    user.setPhoneNumber("027676898");
+    user.setMobile("027676898");
+    user.setOccupation("Student");
+    user.setSuburb("Auckland");
+    user.setEmail("renzoventura@gmail.com");
+    user.setAnnualIncome("$10,000-$50,000");
+    user.setCurrentLoan("$10,000-$50,000");
     user.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user);
+
 
     StatusDTO status1 = new StatusDTO();
     status1.setStatusCode("CREATED");
@@ -95,18 +105,24 @@ public class DataInitializer implements CommandLineRunner {
 
     AccountDTO agent = new AccountDTO();
     agent.setUsername("agent");
+    agent.setFirstName("Kazuya");
+    agent.setLastName("Mishima");
     agent.setPassword(this.passwordEncoder.encode("password"));
     agent.setRoles(Collections.singletonList(ACCOUNT_ROLE_AGENT));
     accountRepository.save(agent);
 
     AccountDTO internal = new AccountDTO();
     internal.setUsername("internal");
+    internal.setFirstName("Internal");
+    internal.setLastName("Account");
     internal.setPassword(this.passwordEncoder.encode("password"));
     internal.setRoles(Collections.singletonList(ACCOUNT_ROLE_INTERNAL));
     accountRepository.save(internal);
 
     AccountDTO user2 = new AccountDTO();
     user2.setUsername("user2");
+    user2.setFirstName("Bob");
+    user2.setLastName("Phoenix");
     user2.setPassword(this.passwordEncoder.encode("password"));
     user2.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user2);
