@@ -26,20 +26,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataInitializer implements CommandLineRunner {
 
-  @Autowired
-  private AccountRepository accountRepository;
+  @Autowired private AccountRepository accountRepository;
 
-  @Autowired
-  private ApplicationRepository applicationRepository;
+  @Autowired private ApplicationRepository applicationRepository;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  @Autowired private PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private ApplicationTypeRepository applicationTypeRepository;
+  @Autowired private ApplicationTypeRepository applicationTypeRepository;
 
-  @Autowired
-  private StatusRepository statusRepository;
+  @Autowired private StatusRepository statusRepository;
 
   @Override
   public void run(String... args) {
@@ -59,7 +54,6 @@ public class DataInitializer implements CommandLineRunner {
     user.setCurrentLoan("$10,000-$50,000");
     user.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user);
-
 
     StatusDTO status1 = new StatusDTO();
     status1.setStatusCode("CREATED");
@@ -85,7 +79,6 @@ public class DataInitializer implements CommandLineRunner {
     status6.setStatusCode("INSU_3");
     status6.setStatusTitle("INSURANCE_3");
     statusRepository.save(status6);
-
 
     ApplicationTypeDTO mortgage = new ApplicationTypeDTO();
     mortgage.setApplicationTypeCode("MORT");
@@ -129,8 +122,7 @@ public class DataInitializer implements CommandLineRunner {
 
     ApplicationDTO application;
 
-    //with agent
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 20; i++) {
       application = new ApplicationDTO();
       application.setOwner(user);
       application.setTitle(String.format("%d Application", i));
@@ -140,25 +132,27 @@ public class DataInitializer implements CommandLineRunner {
       application.setDateCreated(ofEpochDay(randomDay));
       application.setApplicationType(mortgage.getApplicationTypeCode());
       application.setStatus("CREATED");
-      application.setAgent(agent);
+      if (i % 2 == 0) {
+        application.setAgent(agent);
+      }
       applicationRepository.save(application);
     }
 
-    //no agent
-    for(int i = 0; i < 10; i++) {
-      application = new ApplicationDTO();
-      application.setOwner(user2);
-      application.setTitle(String.format("Application Number: %d", i));
-      application.setDescription(String.format("Application Description: %d ", i));
-      long minDay = LocalDate.of(2019, 1, 1).toEpochDay();
-      long randomDay = ThreadLocalRandom.current().nextLong(minDay, LocalDate.now().toEpochDay());
-      application.setDateCreated(ofEpochDay(randomDay));
-      application.setApplicationType(mortgage.getApplicationTypeCode());
-      application.setStatus("CREATED");
-      applicationRepository.save(application);
+    // create agents
+    for (int i = 0; i < 20; i++) {
+      agent = new AccountDTO();
+      agent.setUsername(String.format("agent%d", i));
+      agent.setFirstName(String.format("First Name:%d", i));
+      agent.setLastName(String.format("Last Name:%d", i));
+      if (i % 2 == 0) {
+        agent.setSuburb("Long Bay");
+      } else {
+        agent.setSuburb("Albany");
+      }
+      agent.setEmail(String.format("agent@%d.com", i));
+      agent.setPassword(this.passwordEncoder.encode("password"));
+      agent.setRoles(Collections.singletonList(ACCOUNT_ROLE_AGENT));
+      accountRepository.save(agent);
     }
-
-
   }
-
 }

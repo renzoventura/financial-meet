@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -150,8 +153,11 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public Iterable<AccountDTO> getAllAgents() {
-    return accountRepository.findByRolesIn(ACCOUNT_ROLE_AGENT);
+  public Iterable<AccountDTO> getAllAgents(String firstName, String lastName, String suburb, Integer page, Integer size) {
+    Page<AccountDTO> agents = accountRepository.findByFirstNameContainingAndLastNameContainingAndSuburbContainingAndRolesIn(firstName, lastName, suburb, ACCOUNT_ROLE_AGENT, PageRequest
+        .of(page, size));
+
+    return agents;
   }
 
   @Override

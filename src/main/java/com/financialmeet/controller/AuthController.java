@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,8 +37,14 @@ public class AuthController {
   }
 
   @GetMapping("/agents")
-  public ResponseEntity getAllAgents(){
-    return ok(authServiceImpl.getAllAgents());
+  public ResponseEntity getAllAgents(
+      @RequestParam(value = "firstName", required = false) String firstName,
+      @RequestParam(value = "lastName", required = false) String lastName,
+      @RequestParam(value = "suburb", required = false) String suburb,
+      @RequestParam(value = "page", required = false) Integer page,
+      @RequestParam(value = "size", required = false) Integer size
+  ){
+    return ok(authServiceImpl.getAllAgents(firstName, lastName, suburb, page, size));
   }
 
   @GetMapping("/internals")

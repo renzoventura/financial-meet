@@ -3,6 +3,7 @@ package com.financialmeet.service;
 import com.financialmeet.dto.AccountDTO;
 import com.financialmeet.dto.AuthenticationRequestDTO;
 import java.util.Map;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -26,7 +27,7 @@ public interface AuthService {
 
   Iterable<AccountDTO> getAllUsers();
 
-  Iterable<AccountDTO> getAllAgents();
+  Iterable<AccountDTO> getAllAgents(String firstName, String lastName, String suburb, Integer page, Integer size);
 
   Iterable<AccountDTO> getAllInternals();
 
