@@ -1,10 +1,10 @@
-package com.financialmeet.controller;
+package com.financialmeet.controller.accounts;
 
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.financialmeet.dto.AccountDTO;
-import com.financialmeet.dto.AuthenticationRequestDTO;
+import com.financialmeet.dto.accounts.AccountDTO;
+import com.financialmeet.dto.accounts.AuthenticationRequestDTO;
 import com.financialmeet.service.impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

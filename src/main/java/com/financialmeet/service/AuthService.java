@@ -1,9 +1,8 @@
 package com.financialmeet.service;
 
-import com.financialmeet.dto.AccountDTO;
-import com.financialmeet.dto.AuthenticationRequestDTO;
+import com.financialmeet.dto.accounts.AccountDTO;
+import com.financialmeet.dto.accounts.AuthenticationRequestDTO;
 import java.util.Map;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 

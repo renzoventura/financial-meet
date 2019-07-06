@@ -1,4 +1,4 @@
-package com.financialmeet.dto;
+package com.financialmeet.dto.accounts;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

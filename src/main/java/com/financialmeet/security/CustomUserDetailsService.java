@@ -1,6 +1,6 @@
 package com.financialmeet.security;
 
-import com.financialmeet.repository.AccountRepository;
+import com.financialmeet.repository.accounts.AccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

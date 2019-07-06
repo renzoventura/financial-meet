@@ -1,4 +1,4 @@
-package com.financialmeet.controller;
+package com.financialmeet.controller.applications;
 
 
 import static org.springframework.http.ResponseEntity.ok;

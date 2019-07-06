@@ -1,19 +1,18 @@
 package com.financialmeet;
 
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_AGENT;
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_INTERNAL;
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_AGENT;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_INTERNAL;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_USER;
 import static java.time.LocalDate.ofEpochDay;
 
-import com.financialmeet.dto.AccountDTO;
-import com.financialmeet.dto.ApplicationDTO;
-import com.financialmeet.dto.ApplicationTypeDTO;
-import com.financialmeet.dto.StatusDTO;
-import com.financialmeet.repository.AccountRepository;
-import com.financialmeet.repository.ApplicationRepository;
-import com.financialmeet.repository.ApplicationTypeRepository;
-import com.financialmeet.repository.StatusRepository;
-import com.financialmeet.service.impl.ApplicationServiceImpl;
+import com.financialmeet.dto.accounts.AccountDTO;
+import com.financialmeet.dto.applications.ApplicationDTO;
+import com.financialmeet.dto.applications.ApplicationStatusDTO;
+import com.financialmeet.dto.applications.ApplicationTypeDTO;
+import com.financialmeet.repository.accounts.AccountRepository;
+import com.financialmeet.repository.applications.ApplicationRepository;
+import com.financialmeet.repository.applications.ApplicationStatusRepository;
+import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +33,7 @@ public class DataInitializer implements CommandLineRunner {
 
   @Autowired private ApplicationTypeRepository applicationTypeRepository;
 
-  @Autowired private StatusRepository statusRepository;
+  @Autowired private ApplicationStatusRepository applicationStatusRepository;
 
   @Override
   public void run(String... args) {
@@ -55,30 +54,30 @@ public class DataInitializer implements CommandLineRunner {
     user.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user);
 
-    StatusDTO status1 = new StatusDTO();
-    status1.setStatusCode("CREATED");
-    status1.setStatusTitle("CREATED_TITLE");
-    statusRepository.save(status1);
-    StatusDTO status2 = new StatusDTO();
-    status2.setStatusCode("ASSIGNED");
-    status2.setStatusTitle("ASSIGNED_TITLE");
-    statusRepository.save(status2);
-    StatusDTO status3 = new StatusDTO();
-    status3.setStatusCode("DONE");
-    status3.setStatusTitle("DONE_TITLE");
-    statusRepository.save(status3);
-    StatusDTO status4 = new StatusDTO();
-    status4.setStatusCode("INSU_1");
-    status4.setStatusTitle("INSURANCE_1");
-    statusRepository.save(status4);
-    StatusDTO status5 = new StatusDTO();
-    status5.setStatusCode("INSU_2");
-    status5.setStatusTitle("INSURANCE_2");
-    statusRepository.save(status5);
-    StatusDTO status6 = new StatusDTO();
-    status6.setStatusCode("INSU_3");
-    status6.setStatusTitle("INSURANCE_3");
-    statusRepository.save(status6);
+    ApplicationStatusDTO status1 = new ApplicationStatusDTO();
+    status1.setApplicationStatusCode("CREATED");
+    status1.setApplicationStatusTitle("CREATED_TITLE");
+    applicationStatusRepository.save(status1);
+    ApplicationStatusDTO status2 = new ApplicationStatusDTO();
+    status2.setApplicationStatusCode("ASSIGNED");
+    status2.setApplicationStatusTitle("ASSIGNED_TITLE");
+    applicationStatusRepository.save(status2);
+    ApplicationStatusDTO status3 = new ApplicationStatusDTO();
+    status3.setApplicationStatusCode("DONE");
+    status3.setApplicationStatusTitle("DONE_TITLE");
+    applicationStatusRepository.save(status3);
+    ApplicationStatusDTO status4 = new ApplicationStatusDTO();
+    status4.setApplicationStatusCode("INSU_1");
+    status4.setApplicationStatusTitle("INSURANCE_1");
+    applicationStatusRepository.save(status4);
+    ApplicationStatusDTO status5 = new ApplicationStatusDTO();
+    status5.setApplicationStatusCode("INSU_2");
+    status5.setApplicationStatusTitle("INSURANCE_2");
+    applicationStatusRepository.save(status5);
+    ApplicationStatusDTO status6 = new ApplicationStatusDTO();
+    status6.setApplicationStatusCode("INSU_3");
+    status6.setApplicationStatusTitle("INSURANCE_3");
+    applicationStatusRepository.save(status6);
 
     ApplicationTypeDTO mortgage = new ApplicationTypeDTO();
     mortgage.setApplicationTypeCode("MORT");

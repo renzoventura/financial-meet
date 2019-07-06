@@ -1,9 +1,9 @@
-package com.financialmeet.controller;
+package com.financialmeet.controller.applications;
 
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.financialmeet.dto.ApplicationDTO;
+import com.financialmeet.dto.applications.ApplicationDTO;
 import com.financialmeet.service.impl.ApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

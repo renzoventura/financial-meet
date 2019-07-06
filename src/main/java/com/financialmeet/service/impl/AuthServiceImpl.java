@@ -1,16 +1,16 @@
 package com.financialmeet.service.impl;
 
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_AGENT;
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_INTERNAL;
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_AGENT;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_INTERNAL;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_USER;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.financialmeet.dto.AccountDTO;
-import com.financialmeet.dto.AuthenticationRequestDTO;
-import com.financialmeet.repository.AccountRepository;
+import com.financialmeet.dto.accounts.AccountDTO;
+import com.financialmeet.dto.accounts.AuthenticationRequestDTO;
+import com.financialmeet.repository.accounts.AccountRepository;
 import com.financialmeet.security.auth.JwtTokenProvider;
 import com.financialmeet.service.AuthService;
 import java.util.HashMap;
@@ -19,7 +19,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

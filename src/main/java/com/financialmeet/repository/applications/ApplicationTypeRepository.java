@@ -1,6 +1,6 @@
-package com.financialmeet.repository;
+package com.financialmeet.repository.applications;
 
-import com.financialmeet.dto.ApplicationTypeDTO;
+import com.financialmeet.dto.applications.ApplicationTypeDTO;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

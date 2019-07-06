@@ -1,17 +1,17 @@
 package com.financialmeet.service.impl;
 
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_AGENT;
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_INTERNAL;
-import static com.financialmeet.dto.AccountDTO.ACCOUNT_ROLE_USER;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_AGENT;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_INTERNAL;
+import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_USER;
 
-import com.financialmeet.dto.AccountDTO;
-import com.financialmeet.dto.ApplicationDTO;
-import com.financialmeet.dto.ApplicationTypeDTO;
-import com.financialmeet.dto.StatusDTO;
-import com.financialmeet.repository.AccountRepository;
-import com.financialmeet.repository.ApplicationRepository;
-import com.financialmeet.repository.ApplicationTypeRepository;
-import com.financialmeet.repository.StatusRepository;
+import com.financialmeet.dto.accounts.AccountDTO;
+import com.financialmeet.dto.applications.ApplicationDTO;
+import com.financialmeet.dto.applications.ApplicationTypeDTO;
+import com.financialmeet.dto.applications.ApplicationStatusDTO;
+import com.financialmeet.repository.accounts.AccountRepository;
+import com.financialmeet.repository.applications.ApplicationRepository;
+import com.financialmeet.repository.applications.ApplicationStatusRepository;
+import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import com.financialmeet.service.ApplicationService;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Autowired private ApplicationTypeRepository applicationTypeRepository;
 
-  @Autowired private StatusRepository statusRepository;
+  @Autowired private ApplicationStatusRepository applicationStatusRepository;
 
   @Override
   public Iterable<ApplicationDTO> getAllApplications(
@@ -151,7 +151,7 @@ public class ApplicationServiceImpl implements ApplicationService {
       if (currentApplicationType.isPresent())
         applicationDTO.setApplicationType(currentApplicationType.get().getApplicationTypeCode());
       applicationDTO.setStatus(
-          currentApplicationType.get().getStatuses().get(0).getStatusCode()); // set first
+          currentApplicationType.get().getStatuses().get(0).getApplicationStatusCode()); // set first
       applicationDTO.setOwner(currentAccount.get());
       applicationDTO.setDateCreated(LocalDate.now());
       applicationRepository.save(applicationDTO);
@@ -165,8 +165,8 @@ public class ApplicationServiceImpl implements ApplicationService {
   public ApplicationDTO progressApplicationStatus(Long applicationId) {
     Optional<ApplicationDTO> currentApplication = applicationRepository.findById(applicationId);
     if (currentApplication.isPresent()) {
-      Optional<StatusDTO> currentApplicationStatus =
-          statusRepository.findByStatusCode(currentApplication.get().getStatus());
+      Optional<ApplicationStatusDTO> currentApplicationStatus =
+          applicationStatusRepository.findByApplicationStatusCode(currentApplication.get().getStatus());
       Optional<ApplicationTypeDTO> currentApplicationType =
           applicationTypeRepository.findByApplicationTypeCode(
               currentApplication.get().getApplicationType());
@@ -184,7 +184,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                       .get()
                       .getStatuses()
                       .get(currentProgressIndex + 1)
-                      .getStatusCode());
+                      .getApplicationStatusCode());
 
           applicationRepository.save(currentApplication.get());
           return currentApplication.get();

@@ -1,6 +1,5 @@
-package com.financialmeet.dto;
+package com.financialmeet.dto.applications;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class ApplicationTypeDTO {
   @OneToMany(fetch = FetchType.LAZY)
   @NotNull
   @Column(name = "app_type_statuses")
-  private List<StatusDTO> statuses = new ArrayList<>();
+  private List<ApplicationStatusDTO> statuses = new ArrayList<>();
 
   public String getApplicationTypeCode() {
     return applicationTypeCode;
@@ -48,11 +47,11 @@ public class ApplicationTypeDTO {
     this.applicationTypeCode = applicationTypeCode;
   }
 
-  public List<StatusDTO> getStatuses() {
+  public List<ApplicationStatusDTO> getStatuses() {
     return statuses;
   }
 
-  public void setStatuses(List<StatusDTO> statuses) {
+  public void setStatuses(List<ApplicationStatusDTO> statuses) {
     this.statuses = statuses;
   }
 

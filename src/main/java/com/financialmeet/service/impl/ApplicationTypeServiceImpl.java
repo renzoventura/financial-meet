@@ -1,7 +1,7 @@
 package com.financialmeet.service.impl;
 
-import com.financialmeet.dto.ApplicationTypeDTO;
-import com.financialmeet.repository.ApplicationTypeRepository;
+import com.financialmeet.dto.applications.ApplicationTypeDTO;
+import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import com.financialmeet.service.ApplicationTypeService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;

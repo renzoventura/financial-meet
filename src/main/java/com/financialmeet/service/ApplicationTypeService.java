@@ -1,6 +1,6 @@
 package com.financialmeet.service;
 
-import com.financialmeet.dto.ApplicationTypeDTO;
+import com.financialmeet.dto.applications.ApplicationTypeDTO;
 
 public interface ApplicationTypeService {
 

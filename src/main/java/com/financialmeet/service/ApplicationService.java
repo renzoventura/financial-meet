@@ -1,6 +1,6 @@
 package com.financialmeet.service;
 
-import com.financialmeet.dto.ApplicationDTO;
+import com.financialmeet.dto.applications.ApplicationDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface ApplicationService {

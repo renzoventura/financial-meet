@@ -1,6 +1,7 @@
-package com.financialmeet.dto;
+package com.financialmeet.dto.applications;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.financialmeet.dto.accounts.AccountDTO;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,7 +1,7 @@
-package com.financialmeet.repository;
+package com.financialmeet.repository.applications;
 
-import com.financialmeet.dto.AccountDTO;
-import com.financialmeet.dto.ApplicationDTO;
+import com.financialmeet.dto.accounts.AccountDTO;
+import com.financialmeet.dto.applications.ApplicationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
