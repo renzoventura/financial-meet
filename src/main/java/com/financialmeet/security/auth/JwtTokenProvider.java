@@ -22,7 +22,7 @@ public class JwtTokenProvider {
 
   private String secretKey = "secret"; // to encode
 
-  private long validityInMilliseconds = 600000; // 2 mins
+  private long validityInMilliseconds = 1800000; // 30 mins
 
   @Autowired
   private CustomUserDetailsService userDetailsService;
