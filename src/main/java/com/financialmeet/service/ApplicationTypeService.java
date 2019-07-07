@@ -8,4 +8,6 @@ public interface ApplicationTypeService {
 
   ApplicationTypeDTO getApplicationTypeById(Long applicationTypeId);
 
+  Iterable<String> getAllApplicationTypeTitles();
+
 }

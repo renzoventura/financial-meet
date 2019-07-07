@@ -4,6 +4,7 @@ import com.financialmeet.dto.applications.ApplicationTypeDTO;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import com.financialmeet.service.ApplicationTypeService;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,11 @@ public class ApplicationTypeServiceImpl implements ApplicationTypeService {
     } else {
       return null;
     }
+  }
+
+  @Override
+  public Iterable<String> getAllApplicationTypeTitles() {
+    return applicationTypeRepository.findAll().stream().map(ApplicationTypeDTO::getApplicationTypeTitle).collect(
+        Collectors.toList());
   }
 }

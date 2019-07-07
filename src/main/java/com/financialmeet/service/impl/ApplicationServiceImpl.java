@@ -6,11 +6,13 @@ import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_USER;
 
 import com.financialmeet.dto.accounts.AccountDTO;
 import com.financialmeet.dto.applications.ApplicationDTO;
+import com.financialmeet.dto.applications.ApplicationSubTypeDTO;
 import com.financialmeet.dto.applications.ApplicationTypeDTO;
 import com.financialmeet.dto.applications.ApplicationStatusDTO;
 import com.financialmeet.repository.accounts.AccountRepository;
 import com.financialmeet.repository.applications.ApplicationRepository;
 import com.financialmeet.repository.applications.ApplicationStatusRepository;
+import com.financialmeet.repository.applications.ApplicationSubTypeRepository;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import com.financialmeet.service.ApplicationService;
 import java.time.LocalDate;
@@ -35,6 +37,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Autowired private ApplicationStatusRepository applicationStatusRepository;
 
+  @Autowired private ApplicationSubTypeRepository applicationSubTypeRepository;
+
   @Override
   public Iterable<ApplicationDTO> getAllApplications(
       String applicationTitle, Integer page, Integer size, String order) {
@@ -49,7 +53,6 @@ public class ApplicationServiceImpl implements ApplicationService {
       }
     }
     return null;
-
   }
 
   @Override
@@ -139,7 +142,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public ApplicationDTO createApplicationWithType(
-      String applicationType, ApplicationDTO applicationDTO, UserDetails userDetails) {
+      String applicationType,
+      String applicationSubType,
+      ApplicationDTO applicationDTO,
+      UserDetails userDetails) {
 
     Optional<AccountDTO> currentAccount =
         accountRepository.findByUsername(userDetails.getUsername());
@@ -147,11 +153,31 @@ public class ApplicationServiceImpl implements ApplicationService {
     Optional<ApplicationTypeDTO> currentApplicationType =
         applicationTypeRepository.findByApplicationTypeTitle(applicationType.toUpperCase());
 
-    if (currentAccount.isPresent() && currentAccount.get().getRoles().contains(ACCOUNT_ROLE_USER)) {
-      if (currentApplicationType.isPresent())
-        applicationDTO.setApplicationType(currentApplicationType.get().getApplicationTypeCode());
+    Optional<ApplicationSubTypeDTO> currentApplicationSubType =
+        applicationSubTypeRepository.findByApplicationSubTypeTitle(
+            applicationSubType.toUpperCase());
+
+    if (currentAccount.isPresent()
+        && currentAccount.get().getRoles().contains(ACCOUNT_ROLE_USER)
+        && currentApplicationType.isPresent()
+        && currentApplicationSubType.isPresent()) {
+
+      applicationDTO.setApplicationType(currentApplicationType.get().getApplicationTypeCode());
+
+      // check if sub type and parent type matches
+      if (currentApplicationSubType.get().getParentType() == currentApplicationType.get()) {
+        applicationDTO.setApplicationSubType(
+            currentApplicationSubType.get().getApplicationSubTypeCode());
+      } else {
+        return null;
+      }
+
       applicationDTO.setStatus(
-          currentApplicationType.get().getStatuses().get(0).getApplicationStatusCode()); // set first
+          currentApplicationType
+              .get()
+              .getStatuses()
+              .get(0)
+              .getApplicationStatusCode()); // set first
       applicationDTO.setOwner(currentAccount.get());
       applicationDTO.setDateCreated(LocalDate.now());
       applicationRepository.save(applicationDTO);
@@ -166,7 +192,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     Optional<ApplicationDTO> currentApplication = applicationRepository.findById(applicationId);
     if (currentApplication.isPresent()) {
       Optional<ApplicationStatusDTO> currentApplicationStatus =
-          applicationStatusRepository.findByApplicationStatusCode(currentApplication.get().getStatus());
+          applicationStatusRepository.findByApplicationStatusCode(
+              currentApplication.get().getStatus());
       Optional<ApplicationTypeDTO> currentApplicationType =
           applicationTypeRepository.findByApplicationTypeCode(
               currentApplication.get().getApplicationType());

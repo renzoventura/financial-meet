@@ -51,6 +51,8 @@ public class ApplicationDTO {
 
   private String applicationType;
 
+  private String applicationSubType;
+
   private String status;
 
   @JsonFormat(pattern="dd-MM-yyyy")
@@ -123,4 +125,13 @@ public class ApplicationDTO {
   public void setDateCreated(LocalDate dateCreated) {
     this.dateCreated = dateCreated;
   }
+
+  public String getApplicationSubType() {
+    return applicationSubType;
+  }
+
+  public void setApplicationSubType(String applicationSubType) {
+    this.applicationSubType = applicationSubType;
+  }
+
 }

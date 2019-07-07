@@ -109,15 +109,16 @@ public class ApplicationController {
     return ok(applicationServiceImpl.removeAgentFromApplication(applicationId));
   }
 
-  @PostMapping("/create/{applicationType}")
+  @PostMapping("/create/{applicationType}/{applicationSubType}")
   private ResponseEntity createApplicationWithType(
-      @PathVariable String applicationType,
+      @PathVariable("applicationType")  String applicationType,
+      @PathVariable("applicationSubType")  String applicationSubType,
       @RequestBody ApplicationDTO applicationDTO,
       @AuthenticationPrincipal UserDetails userDetails) {
     try {
       return ok(
           applicationServiceImpl.createApplicationWithType(
-              applicationType, applicationDTO, userDetails));
+              applicationType, applicationSubType, applicationDTO, userDetails));
     } catch (Exception e) {
       return badRequest().body("application creation failed");
     }

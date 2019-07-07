@@ -8,19 +8,24 @@ import static java.time.LocalDate.ofEpochDay;
 import com.financialmeet.dto.accounts.AccountDTO;
 import com.financialmeet.dto.applications.ApplicationDTO;
 import com.financialmeet.dto.applications.ApplicationStatusDTO;
+import com.financialmeet.dto.applications.ApplicationSubTypeDTO;
 import com.financialmeet.dto.applications.ApplicationTypeDTO;
 import com.financialmeet.repository.accounts.AccountRepository;
 import com.financialmeet.repository.applications.ApplicationRepository;
 import com.financialmeet.repository.applications.ApplicationStatusRepository;
+import com.financialmeet.repository.applications.ApplicationSubTypeRepository;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import java.util.Random;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -34,6 +39,9 @@ public class DataInitializer implements CommandLineRunner {
   @Autowired private ApplicationTypeRepository applicationTypeRepository;
 
   @Autowired private ApplicationStatusRepository applicationStatusRepository;
+
+  @Autowired
+  private ApplicationSubTypeRepository applicationSubTypeRepository;
 
   @Override
   public void run(String... args) {
@@ -80,20 +88,57 @@ public class DataInitializer implements CommandLineRunner {
     applicationStatusRepository.save(status6);
 
     ApplicationTypeDTO mortgage = new ApplicationTypeDTO();
-    mortgage.setApplicationTypeCode("MORT");
-    mortgage.setApplicationTypeTitle("MORTGAGE");
+    mortgage.setApplicationTypeCode("MORTGAGE");
+    mortgage.setApplicationTypeTitle("Mortgage");
     mortgage.getStatuses().add(status1);
     mortgage.getStatuses().add(status2);
     mortgage.getStatuses().add(status3);
     applicationTypeRepository.save(mortgage);
 
+    ApplicationSubTypeDTO residentialLoan = new ApplicationSubTypeDTO();
+    residentialLoan.setParentType(mortgage);
+    residentialLoan.setApplicationSubTypeTitle("Residential Loan");
+    residentialLoan.setApplicationSubTypeCode("RESIDENTIAL");
+    applicationSubTypeRepository.save(residentialLoan);
+
+    ApplicationSubTypeDTO commercialLoan = new ApplicationSubTypeDTO();
+    commercialLoan.setParentType(mortgage);
+    commercialLoan.setApplicationSubTypeTitle("Commercial Loan");
+    commercialLoan.setApplicationSubTypeCode("COMMERCIAL");
+    applicationSubTypeRepository.save(commercialLoan);
+
+    ApplicationSubTypeDTO constructionLoan = new ApplicationSubTypeDTO();
+    constructionLoan.setParentType(mortgage);
+    constructionLoan.setApplicationSubTypeTitle("Construction Loan");
+    constructionLoan.setApplicationSubTypeCode("CONSTRUCTION");
+    applicationSubTypeRepository.save(constructionLoan);
+
+    ApplicationSubTypeDTO businessLoan = new ApplicationSubTypeDTO();
+    businessLoan.setParentType(mortgage);
+    businessLoan.setApplicationSubTypeTitle("Business Loan");
+    businessLoan.setApplicationSubTypeCode("BUSINESS");
+    applicationSubTypeRepository.save(businessLoan);
+
     ApplicationTypeDTO insurance = new ApplicationTypeDTO();
-    insurance.setApplicationTypeCode("INSU");
-    insurance.setApplicationTypeTitle("INSURANCE");
+    insurance.setApplicationTypeCode("INSURANCE");
+    insurance.setApplicationTypeTitle("Insurance");
     insurance.getStatuses().add(status4);
     insurance.getStatuses().add(status5);
     insurance.getStatuses().add(status6);
     applicationTypeRepository.save(insurance);
+
+
+    ApplicationSubTypeDTO healthInsurance = new ApplicationSubTypeDTO();
+    healthInsurance.setParentType(insurance);
+    healthInsurance.setApplicationSubTypeTitle("Health Insurance");
+    healthInsurance.setApplicationSubTypeCode("HEALTH");
+    applicationSubTypeRepository.save(healthInsurance);
+
+    ApplicationSubTypeDTO vehicleInsurance = new ApplicationSubTypeDTO();
+    vehicleInsurance.setParentType(insurance);
+    vehicleInsurance.setApplicationSubTypeTitle("Vehicle Insurance");
+    vehicleInsurance.setApplicationSubTypeCode("VEHICLE");
+    applicationSubTypeRepository.save(vehicleInsurance);
 
     AccountDTO agent = new AccountDTO();
     agent.setUsername("agent");
@@ -119,17 +164,45 @@ public class DataInitializer implements CommandLineRunner {
     user2.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user2);
 
-    ApplicationDTO application;
+    List<ApplicationTypeDTO> parentTypes = new ArrayList<ApplicationTypeDTO>();
+    parentTypes.add(mortgage);
+    parentTypes.add(insurance);
 
+    List<ApplicationSubTypeDTO> mortgages = new ArrayList<ApplicationSubTypeDTO>();
+    mortgages.add(residentialLoan);
+    mortgages.add(commercialLoan);
+    mortgages.add(constructionLoan);
+    mortgages.add(businessLoan);
+
+    List<ApplicationSubTypeDTO> insurances = new ArrayList<ApplicationSubTypeDTO>();
+    insurances.add(healthInsurance);
+    insurances.add(vehicleInsurance);
+
+    //generate applications
     for (int i = 0; i < 20; i++) {
-      application = new ApplicationDTO();
+      ApplicationDTO application = new ApplicationDTO();
       application.setOwner(user);
       application.setTitle(String.format("%d Application", i));
       application.setDescription(String.format("%d Application Description", i));
       long minDay = LocalDate.of(2019, 1, 1).toEpochDay();
       long randomDay = ThreadLocalRandom.current().nextLong(minDay, LocalDate.now().toEpochDay());
       application.setDateCreated(ofEpochDay(randomDay));
-      application.setApplicationType(mortgage.getApplicationTypeCode());
+
+      Random rand = new Random();
+      //application.setApplicationType(mortgage.getApplicationTypeCode());
+      //application.setApplicationSubType(residentialLoan.getApplicationSubTypeCode());
+      ApplicationTypeDTO currentParentType = parentTypes.get(rand.nextInt(parentTypes.size()));
+      application.setApplicationType(currentParentType.getApplicationTypeCode());
+
+      if (currentParentType == mortgage) {
+        application.setApplicationSubType(mortgages.get(rand.nextInt(mortgages.size())).getApplicationSubTypeCode());
+
+      }
+
+      if (currentParentType == insurance) {
+        application.setApplicationSubType(insurances.get(rand.nextInt(insurances.size())).getApplicationSubTypeCode());
+      }
+
       application.setStatus("CREATED");
       if (i % 2 == 0) {
         application.setAgent(agent);

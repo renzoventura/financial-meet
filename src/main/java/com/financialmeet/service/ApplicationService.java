@@ -24,7 +24,7 @@ public interface ApplicationService {
       UserDetails userDetails, String applicationTitle, Integer page, Integer size, String order);
 
   ApplicationDTO createApplicationWithType(
-      String applicationType, ApplicationDTO applicationDTO, UserDetails userDetails);
+      String applicationType, String applicationSubType, ApplicationDTO applicationDTO, UserDetails userDetails);
 
   ApplicationDTO progressApplicationStatus(Long applicationId);
 }
