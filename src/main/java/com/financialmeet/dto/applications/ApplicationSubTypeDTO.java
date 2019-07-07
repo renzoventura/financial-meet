@@ -14,7 +14,7 @@ public class ApplicationSubTypeDTO {
 
   @Id
   @Column(name = "app_subtype_id")
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @NotNull
   private long id;
 

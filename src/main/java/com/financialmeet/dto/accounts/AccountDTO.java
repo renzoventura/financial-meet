@@ -33,7 +33,7 @@ public class AccountDTO implements UserDetails {
   public static final String ACCOUNT_ROLE_INTERNAL = "ROLE_INTERNAL";
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @NotNull
   private long Id;
 
