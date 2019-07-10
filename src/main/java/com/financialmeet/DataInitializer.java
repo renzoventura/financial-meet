@@ -17,7 +17,6 @@ import com.financialmeet.repository.applications.ApplicationSubTypeRepository;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -189,18 +188,18 @@ public class DataInitializer implements CommandLineRunner {
       application.setDateCreated(ofEpochDay(randomDay));
 
       Random rand = new Random();
-      //application.setApplicationType(mortgage.getApplicationTypeCode());
-      //application.setApplicationSubType(residentialLoan.getApplicationSubTypeCode());
+      //application.setType(mortgage.getApplicationTypeCode());
+      //application.setSubType(residentialLoan.getApplicationSubTypeCode());
       ApplicationTypeDTO currentParentType = parentTypes.get(rand.nextInt(parentTypes.size()));
-      application.setApplicationType(currentParentType.getApplicationTypeCode());
+      application.setType(currentParentType.getApplicationTypeCode());
 
       if (currentParentType == mortgage) {
-        application.setApplicationSubType(mortgages.get(rand.nextInt(mortgages.size())).getApplicationSubTypeCode());
+        application.setSubType(mortgages.get(rand.nextInt(mortgages.size())).getApplicationSubTypeCode());
 
       }
 
       if (currentParentType == insurance) {
-        application.setApplicationSubType(insurances.get(rand.nextInt(insurances.size())).getApplicationSubTypeCode());
+        application.setSubType(insurances.get(rand.nextInt(insurances.size())).getApplicationSubTypeCode());
       }
 
       application.setStatus("CREATED");

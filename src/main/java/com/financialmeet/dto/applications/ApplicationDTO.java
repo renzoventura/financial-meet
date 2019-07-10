@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -50,9 +49,9 @@ public class ApplicationDTO {
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AccountDTO internal;
 
-  private String applicationType;
+  private String type;
 
-  private String applicationSubType;
+  private String subType;
 
   private String status;
 
@@ -111,12 +110,12 @@ public class ApplicationDTO {
     this.owner = owner;
   }
 
-  public String getApplicationType() {
-    return applicationType;
+  public String getType() {
+    return type;
   }
 
-  public void setApplicationType(String applicationType) {
-    this.applicationType = applicationType;
+  public void setType(String type) {
+    this.type = type;
   }
 
   public LocalDate getDateCreated() {
@@ -127,12 +126,12 @@ public class ApplicationDTO {
     this.dateCreated = dateCreated;
   }
 
-  public String getApplicationSubType() {
-    return applicationSubType;
+  public String getSubType() {
+    return subType;
   }
 
-  public void setApplicationSubType(String applicationSubType) {
-    this.applicationSubType = applicationSubType;
+  public void setSubType(String subType) {
+    this.subType = subType;
   }
 
 }

@@ -27,10 +27,13 @@ public class ApplicationController {
   @GetMapping("/i/all")
   private ResponseEntity getAllApplications(
       @RequestParam(value = "title", required = false) String applicationTitle,
+      @RequestParam(value = "type", required = false) String type,
+      @RequestParam(value = "subType", required = false) String subType,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size,
       @RequestParam(value = "order", required = false) String order) {
-    return ok(applicationServiceImpl.getAllApplications(applicationTitle, page, size, order));
+    return ok(applicationServiceImpl.getAllApplications(applicationTitle, type,
+        subType, page, size, order));
   }
 
   @GetMapping("/{id}")
@@ -42,22 +45,28 @@ public class ApplicationController {
   private ResponseEntity getApplicationsByOwner(
       @AuthenticationPrincipal UserDetails userDetails,
       @RequestParam(value = "title", required = false) String applicationTitle,
+      @RequestParam(value = "type", required = false) String type,
+      @RequestParam(value = "subType", required = false) String subType,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size,
       @RequestParam(value = "order", required = false) String order) {
     return ok(
-        applicationServiceImpl.getApplicationsByOwner(userDetails, applicationTitle, page, size, order));
+        applicationServiceImpl.getApplicationsByOwner(userDetails, applicationTitle, type,
+            subType, page, size, order));
   }
 
   @GetMapping("/a/current")
   private ResponseEntity getApplicationByAgent(
       @AuthenticationPrincipal UserDetails userDetails,
       @RequestParam(value = "title", required = false) String applicationTitle,
+      @RequestParam(value = "type", required = false) String type,
+      @RequestParam(value = "subType", required = false) String subType,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size,
       @RequestParam(value = "order", required = false) String order) {
     return ok(
-        applicationServiceImpl.getApplicationsByAgent(userDetails, applicationTitle, page, size, order));
+        applicationServiceImpl.getApplicationsByAgent(userDetails, applicationTitle, type,
+            subType, page, size, order));
   }
 
   @PostMapping("/create")

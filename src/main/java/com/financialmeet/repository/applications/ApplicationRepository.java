@@ -8,17 +8,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ApplicationRepository extends JpaRepository<ApplicationDTO, Long> {
 
-  Page<ApplicationDTO> findAllByTitleContainingOrderByDateCreatedAsc(String applicationTitle, Pageable pageable);
+  Page<ApplicationDTO> findAllByTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
 
-  Page<ApplicationDTO> findAllByTitleContainingOrderByDateCreatedDesc(String applicationTitle, Pageable pageable);
+  Page<ApplicationDTO> findAllByTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
 
-  Page<ApplicationDTO> findByOwnerAndTitleContainingOrderByDateCreatedAsc(AccountDTO accountDTO, String applicationTitle, Pageable pageable);
+  Page<ApplicationDTO> findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(AccountDTO accountDTO, String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
 
-  Page<ApplicationDTO> findByOwnerAndTitleContainingOrderByDateCreatedDesc(AccountDTO accountDTO, String applicationTitle, Pageable pageable);
+  Page<ApplicationDTO> findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(AccountDTO accountDTO, String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
 
 
-  Page<ApplicationDTO> findByAgentAndTitleContainingOrderByDateCreatedAsc(AccountDTO accountDTO, String applicationTitle, Pageable pageable);
+  Page<ApplicationDTO> findByAgentAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(AccountDTO accountDTO, String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
 
-  Page<ApplicationDTO> findByAgentAndTitleContainingOrderByDateCreatedDesc(AccountDTO accountDTO, String applicationTitle, Pageable pageable);
+  Page<ApplicationDTO> findByAgentAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(AccountDTO accountDTO, String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
 
 }

@@ -41,15 +41,25 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getAllApplications(
-      String applicationTitle, Integer page, Integer size, String order) {
+      String applicationTitle, String type, String subType, Integer page, Integer size, String order) {
+
+    //change these to enum waste of read
+    Optional<ApplicationTypeDTO> currentApplicationType =
+        applicationTypeRepository.findByApplicationTypeTitle(type.toUpperCase());
+    Optional<ApplicationSubTypeDTO> currentApplicationSubType =
+        applicationSubTypeRepository.findByApplicationSubTypeTitle(
+            subType.toUpperCase());
+
+    type = currentApplicationType.isPresent() ? currentApplicationType.get().getApplicationTypeCode() : "";
+    subType = currentApplicationSubType.isPresent() ? currentApplicationSubType.get().getApplicationSubTypeCode() : "";
 
     if (!order.isEmpty()) {
       if (order.equalsIgnoreCase(DESCENDING)) {
-        return applicationRepository.findAllByTitleContainingOrderByDateCreatedDesc(
-            applicationTitle, PageRequest.of(page, size));
+        return applicationRepository.findAllByTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(
+            applicationTitle, type, subType, PageRequest.of(page, size));
       } else {
-        return applicationRepository.findAllByTitleContainingOrderByDateCreatedAsc(
-            applicationTitle, PageRequest.of(page, size));
+        return applicationRepository.findAllByTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(
+            applicationTitle, type, subType, PageRequest.of(page, size));
       }
     }
     return null;
@@ -124,17 +134,30 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getApplicationsByAgent(
-      UserDetails userDetails, String applicationTitle, Integer page, Integer size, String order) {
+      UserDetails userDetails, String applicationTitle, String type, String subType, Integer page, Integer size, String order) {
     Optional<AccountDTO> currentAccount =
         accountRepository.findByUsername(userDetails.getUsername());
-    if (currentAccount.isPresent() && !order.isEmpty()) {
+
+    //change these to enum waste of read
+    Optional<ApplicationTypeDTO> currentApplicationType =
+        applicationTypeRepository.findByApplicationTypeTitle(type.toUpperCase());
+    Optional<ApplicationSubTypeDTO> currentApplicationSubType =
+        applicationSubTypeRepository.findByApplicationSubTypeTitle(
+            subType.toUpperCase());
+
+    order = !order.isEmpty() ? order : DESCENDING;
+
+    type = currentApplicationType.isPresent() ? currentApplicationType.get().getApplicationTypeCode() : "";
+    subType = currentApplicationSubType.isPresent() ? currentApplicationSubType.get().getApplicationSubTypeCode() : "";
+
+    if (currentAccount.isPresent()) {
 
       if (order.equalsIgnoreCase(DESCENDING)) {
-        return applicationRepository.findByAgentAndTitleContainingOrderByDateCreatedDesc(
-            currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+        return applicationRepository.findByAgentAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(
+            currentAccount.get(), applicationTitle, type, subType, PageRequest.of(page, size));
       } else {
-        return applicationRepository.findByAgentAndTitleContainingOrderByDateCreatedAsc(
-            currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+        return applicationRepository.findByAgentAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(
+            currentAccount.get(), applicationTitle, type, subType, PageRequest.of(page, size));
       }
     }
     return null;
@@ -162,11 +185,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         && currentApplicationType.isPresent()
         && currentApplicationSubType.isPresent()) {
 
-      applicationDTO.setApplicationType(currentApplicationType.get().getApplicationTypeCode());
+      applicationDTO.setType(currentApplicationType.get().getApplicationTypeCode());
 
       // check if sub type and parent type matches
       if (currentApplicationSubType.get().getParentType() == currentApplicationType.get()) {
-        applicationDTO.setApplicationSubType(
+        applicationDTO.setSubType(
             currentApplicationSubType.get().getApplicationSubTypeCode());
       } else {
         return null;
@@ -196,7 +219,7 @@ public class ApplicationServiceImpl implements ApplicationService {
               currentApplication.get().getStatus());
       Optional<ApplicationTypeDTO> currentApplicationType =
           applicationTypeRepository.findByApplicationTypeCode(
-              currentApplication.get().getApplicationType());
+              currentApplication.get().getType());
 
       if (currentApplicationStatus.isPresent() && currentApplicationType.isPresent()) {
         int currentProgressIndex =
@@ -223,17 +246,29 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getApplicationsByOwner(
-      UserDetails userDetails, String applicationTitle, Integer page, Integer size, String order) {
+      UserDetails userDetails, String applicationTitle, String type, String subType, Integer page, Integer size, String order) {
     Optional<AccountDTO> currentAccount =
         accountRepository.findByUsername(userDetails.getUsername());
-    if (currentAccount.isPresent() && !order.isEmpty()) {
 
+    //change these to enum waste of read
+    Optional<ApplicationTypeDTO> currentApplicationType =
+        applicationTypeRepository.findByApplicationTypeTitle(type.toUpperCase());
+    Optional<ApplicationSubTypeDTO> currentApplicationSubType =
+        applicationSubTypeRepository.findByApplicationSubTypeTitle(
+            subType.toUpperCase());
+
+    order = !order.isEmpty() ? order : DESCENDING;
+
+    type = currentApplicationType.isPresent() ? currentApplicationType.get().getApplicationTypeCode() : "";
+    subType = currentApplicationSubType.isPresent() ? currentApplicationSubType.get().getApplicationSubTypeCode() : "";
+
+    if (currentAccount.isPresent()) {
       if (order.equalsIgnoreCase(DESCENDING)) {
-        return applicationRepository.findByOwnerAndTitleContainingOrderByDateCreatedDesc(
-            currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+        return applicationRepository.findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(
+            currentAccount.get(), applicationTitle, type, subType, PageRequest.of(page, size));
       } else {
-        return applicationRepository.findByOwnerAndTitleContainingOrderByDateCreatedAsc(
-            currentAccount.get(), applicationTitle, PageRequest.of(page, size));
+        return applicationRepository.findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(
+            currentAccount.get(), applicationTitle, type, subType, PageRequest.of(page, size));
       }
     }
     return null;
