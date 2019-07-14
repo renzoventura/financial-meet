@@ -17,6 +17,7 @@ import com.financialmeet.repository.applications.ApplicationSubTypeRepository;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -74,16 +75,16 @@ public class DataInitializer implements CommandLineRunner {
     status3.setApplicationStatusTitle("DONE_TITLE");
     applicationStatusRepository.save(status3);
     ApplicationStatusDTO status4 = new ApplicationStatusDTO();
-    status4.setApplicationStatusCode("INSU_1");
+    status4.setApplicationStatusCode("CREATED_INS");
     status4.setApplicationStatusTitle("INSURANCE_1");
     applicationStatusRepository.save(status4);
     ApplicationStatusDTO status5 = new ApplicationStatusDTO();
-    status5.setApplicationStatusCode("INSU_2");
+    status5.setApplicationStatusCode("ASSIGNED_INS");
     status5.setApplicationStatusTitle("INSURANCE_2");
     applicationStatusRepository.save(status5);
     ApplicationStatusDTO status6 = new ApplicationStatusDTO();
-    status6.setApplicationStatusCode("INSU_3");
-    status6.setApplicationStatusTitle("INSURANCE_3");
+    status6.setApplicationStatusCode("DONE");
+    status6.setApplicationStatusTitle("DONE_TITLE");
     applicationStatusRepository.save(status6);
 
     ApplicationTypeDTO mortgage = new ApplicationTypeDTO();
@@ -163,17 +164,17 @@ public class DataInitializer implements CommandLineRunner {
     user2.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
     accountRepository.save(user2);
 
-    List<ApplicationTypeDTO> parentTypes = new ArrayList<ApplicationTypeDTO>();
+    List<ApplicationTypeDTO> parentTypes = new ArrayList<>();
     parentTypes.add(mortgage);
     parentTypes.add(insurance);
 
-    List<ApplicationSubTypeDTO> mortgages = new ArrayList<ApplicationSubTypeDTO>();
+    List<ApplicationSubTypeDTO> mortgages = new ArrayList<>();
     mortgages.add(residentialLoan);
     mortgages.add(commercialLoan);
     mortgages.add(constructionLoan);
     mortgages.add(businessLoan);
 
-    List<ApplicationSubTypeDTO> insurances = new ArrayList<ApplicationSubTypeDTO>();
+    List<ApplicationSubTypeDTO> insurances = new ArrayList<>();
     insurances.add(healthInsurance);
     insurances.add(vehicleInsurance);
 
@@ -195,14 +196,16 @@ public class DataInitializer implements CommandLineRunner {
 
       if (currentParentType == mortgage) {
         application.setSubType(mortgages.get(rand.nextInt(mortgages.size())).getApplicationSubTypeCode());
+        application.setStatus(status1.getApplicationStatusCode());
 
       }
 
       if (currentParentType == insurance) {
         application.setSubType(insurances.get(rand.nextInt(insurances.size())).getApplicationSubTypeCode());
+        application.setStatus(status4.getApplicationStatusCode());
+
       }
 
-      application.setStatus("CREATED");
       if (i % 2 == 0) {
         application.setAgent(agent);
       }
@@ -210,11 +213,15 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     // create agents
+    List<String> firstNames = Arrays.asList("Kobe", "Lebron", "Michael", "Kyrie", "Ben", "Kawhi", "John");
+    List<String> lastNames = Arrays.asList("Bryant", "James", "Jordan", "Irving", "Simmons", "Leonard", "Wall");
+
     for (int i = 0; i < 20; i++) {
+      Random rand = new Random();
       agent = new AccountDTO();
       agent.setUsername(String.format("agent%d", i));
-      agent.setFirstName(String.format("First Name:%d", i));
-      agent.setLastName(String.format("Last Name:%d", i));
+      agent.setFirstName(firstNames.get(rand.nextInt(firstNames.size())));
+      agent.setLastName(lastNames.get(rand.nextInt(lastNames.size())));
       if (i % 2 == 0) {
         agent.setSuburb("Long Bay");
       } else {

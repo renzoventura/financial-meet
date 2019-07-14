@@ -36,9 +36,10 @@ public class ApplicationController {
         subType, page, size, order));
   }
 
-  @GetMapping("/{id}")
-  private ResponseEntity getApplicationById(@PathVariable Long applicationId) {
-    return ok(applicationServiceImpl.getApplicationById(applicationId));
+  @GetMapping()
+  private ResponseEntity getApplicationById(@AuthenticationPrincipal UserDetails userDetails,
+      @RequestParam(value = "id", required = false) Long id) {
+    return ok(applicationServiceImpl.getApplicationById(id));
   }
 
   @GetMapping("/u/current")
@@ -80,9 +81,11 @@ public class ApplicationController {
     }
   }
 
-  @PutMapping("/{applicationId}/assign/agent/{agentId}")
+  @PutMapping("/assign")
   private ResponseEntity assignAgentToApplication(
-      @PathVariable("applicationId") Long applicationId, @PathVariable Long agentId) {
+      //@PathVariable("applicationId") Long applicationId, @PathVariable Long agentId,
+      @RequestParam(value = "applicationId", required = false) Long applicationId,
+      @RequestParam(value = "agentId", required = false) Long agentId) {
     try {
       ApplicationDTO currentApplication =
           applicationServiceImpl.assignAgentToApplication(applicationId, agentId);
