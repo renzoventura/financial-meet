@@ -3,6 +3,8 @@ package com.financialmeet.service.impl;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_AGENT;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_INTERNAL;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_USER;
+import static com.financialmeet.util.PaginationUtil.createPageRequest;
+import static com.financialmeet.util.PaginationUtil.getDirection;
 
 import com.financialmeet.dto.accounts.AccountDTO;
 import com.financialmeet.dto.applications.ApplicationDTO;
@@ -16,10 +18,10 @@ import com.financialmeet.repository.applications.ApplicationSubTypeRepository;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import com.financialmeet.service.ApplicationService;
 import java.time.LocalDate;
-import java.util.Iterator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,7 @@ public class ApplicationServiceImpl implements ApplicationService {
   private final String ASCENDING = "ASC";
   private final String DESCENDING = "DESC";
   private final int LAST_ELEMENT_IN_ARRAY_INDEX = -1;
+  private final String APPLICATION_ATTRIBUTE_DATE_CREATED = "dateCreated";
 
   @Autowired private ApplicationRepository applicationRepository;
 
@@ -60,14 +63,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     subType = currentApplicationSubType.isPresent() ? currentApplicationSubType.get().getApplicationSubTypeCode() : "";
 
     if (!order.isEmpty()) {
-      if (order.equalsIgnoreCase(DESCENDING)) {
-        return applicationRepository.findAllByTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(
-            applicationTitle, type, subType, PageRequest.of(page, size));
-      } else {
-        return applicationRepository.findAllByTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(
-            applicationTitle, type, subType, PageRequest.of(page, size));
-      }
+      Pageable pageable = createPageRequest(page, size, getDirection(order), APPLICATION_ATTRIBUTE_DATE_CREATED);
+      return applicationRepository.findAllByTitleContainingAndTypeContainingAndSubTypeContaining(
+          applicationTitle, type, subType, pageable);
     }
+
     return null;
   }
 
@@ -164,13 +164,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     subType = currentApplicationSubType.isPresent() ? currentApplicationSubType.get().getApplicationSubTypeCode() : "";
 
     if (currentAccount.isPresent()) {
-
-      if (order.equalsIgnoreCase(DESCENDING)) {
-        return applicationRepository.findByAgentAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(
-            currentAccount.get(), applicationTitle, type, subType, PageRequest.of(page, size));
-      } else {
-        return applicationRepository.findByAgentAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(
-            currentAccount.get(), applicationTitle, type, subType, PageRequest.of(page, size));
+      if (!order.isEmpty()) {
+        Pageable pageable = createPageRequest(page, size, getDirection(order), APPLICATION_ATTRIBUTE_DATE_CREATED);
+        return applicationRepository.findByAgentAndTitleContainingAndTypeContainingAndSubTypeContaining(
+            currentAccount.get(), applicationTitle, type, subType, pageable);
       }
     }
     return null;
@@ -276,12 +273,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     subType = currentApplicationSubType.isPresent() ? currentApplicationSubType.get().getApplicationSubTypeCode() : "";
 
     if (currentAccount.isPresent()) {
-      if (order.equalsIgnoreCase(DESCENDING)) {
-        return applicationRepository.findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedDesc(
-            currentAccount.get(), applicationTitle, type, subType, PageRequest.of(page, size));
-      } else {
-        return applicationRepository.findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContainingOrderByDateCreatedAsc(
-            currentAccount.get(), applicationTitle, type, subType, PageRequest.of(page, size));
+      if (!order.isEmpty()) {
+        Pageable pageable = createPageRequest(page, size, getDirection(order), APPLICATION_ATTRIBUTE_DATE_CREATED);
+        return applicationRepository.findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContaining(
+            currentAccount.get(), applicationTitle, type, subType, pageable);
       }
     }
     return null;
