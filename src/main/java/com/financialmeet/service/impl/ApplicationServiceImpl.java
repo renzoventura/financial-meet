@@ -16,6 +16,8 @@ import com.financialmeet.repository.applications.ApplicationSubTypeRepository;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import com.financialmeet.service.ApplicationService;
 import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +30,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   private final String ASCENDING = "ASC";
   private final String DESCENDING = "DESC";
+  private final int LAST_ELEMENT_IN_ARRAY_INDEX = -1;
 
   @Autowired private ApplicationRepository applicationRepository;
 
@@ -38,6 +41,9 @@ public class ApplicationServiceImpl implements ApplicationService {
   @Autowired private ApplicationStatusRepository applicationStatusRepository;
 
   @Autowired private ApplicationSubTypeRepository applicationSubTypeRepository;
+
+  @Autowired
+  private ApplicationTypeServiceImpl applicationTypeService;
 
   @Override
   public Iterable<ApplicationDTO> getAllApplications(
@@ -128,8 +134,15 @@ public class ApplicationServiceImpl implements ApplicationService {
   @Override
   public ApplicationDTO removeAgentFromApplication(Long applicationId) {
     ApplicationDTO newApplication = applicationRepository.getOne(applicationId);
-    newApplication.setAgent(null);
-    return applicationRepository.save(newApplication);
+    List<ApplicationStatusDTO> statuses = applicationTypeService.getApplicationStatusesByType(newApplication.getType());
+
+    String lastStatusInStatuses = statuses.get(statuses.size()-1).getApplicationStatusCode();
+
+    if (!lastStatusInStatuses.equalsIgnoreCase(newApplication.getStatus())) {
+      newApplication.setAgent(null);
+      return applicationRepository.save(newApplication);
+    }
+    return null;
   }
 
   @Override

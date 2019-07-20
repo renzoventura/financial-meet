@@ -4,6 +4,7 @@ import com.financialmeet.dto.applications.ApplicationStatusDTO;
 import com.financialmeet.dto.applications.ApplicationTypeDTO;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import com.financialmeet.service.ApplicationTypeService;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class ApplicationTypeServiceImpl implements ApplicationTypeService {
   }
 
   @Override
-  public Iterable<ApplicationStatusDTO> getApplicationStatusesByType(String type) {
+  public List<ApplicationStatusDTO> getApplicationStatusesByType(String type) {
     Optional<ApplicationTypeDTO> applicationTypeDTO =
         applicationTypeRepository.findByApplicationTypeCode(type);
 

@@ -118,7 +118,12 @@ public class ApplicationController {
   @GetMapping("/{applicationId}/remove/agent")
   private ResponseEntity removeAgentFromApplication(
       @PathVariable("applicationId") Long applicationId) {
-    return ok(applicationServiceImpl.removeAgentFromApplication(applicationId));
+    ApplicationDTO application = applicationServiceImpl.removeAgentFromApplication(applicationId);
+    if ( application != null) {
+      return ok(application);
+    } else {
+      return badRequest().body("Application is finished, therefore cannot unassign agent!");
+    }
   }
 
   @PostMapping("/create/{applicationType}/{applicationSubType}")
