@@ -1,5 +1,6 @@
 package com.financialmeet.service.impl;
 
+import com.financialmeet.dto.applications.ApplicationStatusDTO;
 import com.financialmeet.dto.applications.ApplicationTypeDTO;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
 import com.financialmeet.service.ApplicationTypeService;
@@ -33,5 +34,17 @@ public class ApplicationTypeServiceImpl implements ApplicationTypeService {
   public Iterable<String> getAllApplicationTypeTitles() {
     return applicationTypeRepository.findAll().stream().map(ApplicationTypeDTO::getApplicationTypeTitle).collect(
         Collectors.toList());
+  }
+
+  @Override
+  public Iterable<ApplicationStatusDTO> getApplicationStatusesByType(String type) {
+    Optional<ApplicationTypeDTO> applicationTypeDTO =
+        applicationTypeRepository.findByApplicationTypeCode(type);
+
+    if (applicationTypeDTO.isPresent()) {
+      return applicationTypeDTO.get().getStatuses();
+    } else {
+      return null;
+    }
   }
 }
