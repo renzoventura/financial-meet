@@ -178,6 +178,10 @@ public class DataInitializer implements CommandLineRunner {
     insurances.add(healthInsurance);
     insurances.add(vehicleInsurance);
 
+    List<ApplicationSubTypeDTO> allSubTypes = new ArrayList<>();
+    allSubTypes.addAll(mortgages);
+    allSubTypes.addAll(insurances);
+
     //generate applications
     for (int i = 0; i < 20; i++) {
       ApplicationDTO application = new ApplicationDTO();
@@ -230,6 +234,14 @@ public class DataInitializer implements CommandLineRunner {
       agent.setEmail(String.format("agent@%d.com", i));
       agent.setPassword(this.passwordEncoder.encode("password"));
       agent.setRoles(Collections.singletonList(ACCOUNT_ROLE_AGENT));
+      List<String> agentSpecialization = new ArrayList<>();
+      for (int x = 0; x < 4; x++) {
+        String code = allSubTypes.get(rand.nextInt(allSubTypes.size()-1)).getApplicationSubTypeCode();
+        if (!agentSpecialization.contains(code)) {
+          agentSpecialization.add(code);
+        }
+      }
+      agent.setSpecializations(agentSpecialization);
       accountRepository.save(agent);
     }
   }

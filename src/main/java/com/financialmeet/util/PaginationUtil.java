@@ -30,7 +30,10 @@ public final class PaginationUtil {
 
   public static Pageable createPageRequest(int page, int size, Sort.Direction direction, String orderProperty) {
     return PageRequest.of(page - 1, size, direction, orderProperty);
+  }
 
+  public static Pageable createPageRequest(int page, int size) {
+    return PageRequest.of(page - 1, size );
   }
 
 }

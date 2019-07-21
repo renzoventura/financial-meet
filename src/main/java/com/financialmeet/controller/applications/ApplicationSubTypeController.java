@@ -17,8 +17,13 @@ public class ApplicationSubTypeController {
   @Autowired
   private ApplicationSubTypeServiceImpl applicationSubTypeServiceImpl;
 
+  @GetMapping()
+  private ResponseEntity getAllApplicationSubTypeTitle() {
+    return ok(applicationSubTypeServiceImpl.getAllApplicationSubTypeTitle());
+  }
+
   @GetMapping("/title")
-  private ResponseEntity getAllApplicationSubTypeTitle(
+  private ResponseEntity getAllApplicationSubTypeTitleByParent(
       @RequestParam(value = "parent", required = false) String parentApplicationTitle
   ) {
     return ok(applicationSubTypeServiceImpl.getAllApplicationSubTypeTitleByParent(parentApplicationTitle));

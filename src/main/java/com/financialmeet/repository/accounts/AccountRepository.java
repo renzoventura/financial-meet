@@ -12,4 +12,6 @@ public interface AccountRepository extends JpaRepository<AccountDTO, Long> {
   Iterable<AccountDTO> findByRolesIn (String role);
 
   Page<AccountDTO> findByFirstNameContainingAndLastNameContainingAndSuburbContainingAndRolesIn(String firstName, String lastName, String Suburb, String role, Pageable pageable);
+
+  Page<AccountDTO> findByFirstNameContainingAndLastNameContainingAndSuburbContainingAndSpecializationsInAndRolesIn(String firstName, String lastName, String Suburb, String specialization, String role, Pageable pageable);
 }

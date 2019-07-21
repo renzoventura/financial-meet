@@ -26,7 +26,7 @@ public interface AuthService {
 
   Iterable<AccountDTO> getAllUsers();
 
-  Iterable<AccountDTO> getAllAgents(String firstName, String lastName, String suburb, Integer page, Integer size);
+  Iterable<AccountDTO> getAllAgents(String firstName, String lastName, String suburb, String subType, Integer page, Integer size);
 
   Iterable<AccountDTO> getAllInternals();
 

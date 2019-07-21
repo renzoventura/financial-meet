@@ -40,10 +40,11 @@ public class AuthController {
       @RequestParam(value = "firstName", required = false) String firstName,
       @RequestParam(value = "lastName", required = false) String lastName,
       @RequestParam(value = "suburb", required = false) String suburb,
+      @RequestParam(value = "subType", required = false) String subType,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size
   ){
-    return ok(authServiceImpl.getAllAgents(firstName, lastName, suburb, page, size));
+    return ok(authServiceImpl.getAllAgents(firstName, lastName, suburb, subType, page, size));
   }
 
   @GetMapping("/internals")

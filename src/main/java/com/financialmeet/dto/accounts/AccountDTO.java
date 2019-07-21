@@ -5,15 +5,19 @@ import static java.util.stream.Collectors.toList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.financialmeet.dto.applications.ApplicationSubTypeDTO;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -73,6 +77,21 @@ public class AccountDTO implements UserDetails {
   private String annualIncome;
 
   private String currentLoan;
+
+/*  //list of applicationSubType Codes
+  @OneToMany(mappedBy="id", fetch = FetchType.LAZY)
+  @Column(name = "specializations")*/
+  @ElementCollection
+  @CollectionTable(name = "account_specializations")
+  private List<String> specializations;
+
+  public List<String> getSpecializations() {
+    return specializations;
+  }
+
+  public void setSpecializations(List<String> specializations) {
+    this.specializations = specializations;
+  }
 
   public String getFirstName() {
     return firstName;

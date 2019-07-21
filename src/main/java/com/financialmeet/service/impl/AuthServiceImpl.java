@@ -3,6 +3,8 @@ package com.financialmeet.service.impl;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_AGENT;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_INTERNAL;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_USER;
+import static com.financialmeet.util.PaginationUtil.createPageRequest;
+import static com.financialmeet.util.PaginationUtil.getDirection;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -19,6 +21,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -152,11 +155,16 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public Iterable<AccountDTO> getAllAgents(String firstName, String lastName, String suburb, Integer page, Integer size) {
-    Page<AccountDTO> agents = accountRepository.findByFirstNameContainingAndLastNameContainingAndSuburbContainingAndRolesIn(firstName, lastName, suburb, ACCOUNT_ROLE_AGENT, PageRequest
-        .of(page, size));
+  public Iterable<AccountDTO> getAllAgents(String firstName, String lastName, String suburb, String subType, Integer page, Integer size) {
+    Pageable pageable = createPageRequest(page, size);
 
-    return agents;
+    if (subType.isEmpty()) {
+      return accountRepository.findByFirstNameContainingAndLastNameContainingAndSuburbContainingAndRolesIn(firstName, lastName, suburb, ACCOUNT_ROLE_AGENT, pageable);
+    } else {
+
+
+      return accountRepository.findByFirstNameContainingAndLastNameContainingAndSuburbContainingAndSpecializationsInAndRolesIn(firstName, lastName, suburb, subType, ACCOUNT_ROLE_AGENT, pageable);
+    }
   }
 
   @Override
