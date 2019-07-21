@@ -18,8 +18,8 @@ public class ApplicationSubTypeController {
   private ApplicationSubTypeServiceImpl applicationSubTypeServiceImpl;
 
   @GetMapping()
-  private ResponseEntity getAllApplicationSubTypeTitle() {
-    return ok(applicationSubTypeServiceImpl.getAllApplicationSubTypeTitle());
+  private ResponseEntity getAllApplicationSubTypeCode() {
+    return ok(applicationSubTypeServiceImpl.getAllApplicationSubTypeCode());
   }
 
   @GetMapping("/title")

@@ -21,7 +21,7 @@ public class ApplicationSubTypeServiceImpl implements ApplicationSubTypeService 
   private ApplicationSubTypeRepository applicationSubTypeRepository;
 
   @Override
-  public Iterable<String> getAllApplicationSubTypeTitle() {
+  public Iterable<String> getAllApplicationSubTypeCode() {
     return applicationSubTypeRepository.findAll().stream().map(ApplicationSubTypeDTO::getApplicationSubTypeCode).collect(
         Collectors.toList());
   }
