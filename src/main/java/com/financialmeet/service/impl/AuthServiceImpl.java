@@ -3,8 +3,8 @@ package com.financialmeet.service.impl;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_AGENT;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_INTERNAL;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_USER;
+import static com.financialmeet.dto.shared.Status.ACTIVE_CODE;
 import static com.financialmeet.util.PaginationUtil.createPageRequest;
-import static com.financialmeet.util.PaginationUtil.getDirection;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -12,17 +12,22 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import com.financialmeet.dto.accounts.AccountDTO;
 import com.financialmeet.dto.accounts.AuthenticationRequestDTO;
+import com.financialmeet.dto.accounts.VerificationTokenDTO;
+import com.financialmeet.dto.shared.Status;
 import com.financialmeet.repository.accounts.AccountRepository;
+import com.financialmeet.repository.accounts.VerificationTokenRepository;
+import com.financialmeet.repository.shared.StatusRepostiory;
 import com.financialmeet.security.auth.JwtTokenProvider;
 import com.financialmeet.service.AuthService;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,6 +46,8 @@ public class AuthServiceImpl implements AuthService {
   private static final String TOKEN = "token";
   private static final String ROLES  = "roles";
 
+  private static final Logger LOGGER = Logger.getLogger( AuthServiceImpl.class.getName() );
+
   @Autowired
   private AccountRepository accountRepository;
 
@@ -53,37 +60,70 @@ public class AuthServiceImpl implements AuthService {
   @Autowired
   private PasswordEncoder encoder;
 
+  @Autowired
+  private EmailSenderServiceImpl emailSenderService;
+
+  @Autowired
+  private StatusRepostiory statusRepostiory;
+
+  @Autowired
+  private VerificationTokenRepository verificationTokenRepository;
+
   @Override
-  public Map signIn(@RequestBody AuthenticationRequestDTO data){
+  public ResponseEntity<?> signIn(@RequestBody AuthenticationRequestDTO data){
     try {
       String username = data.getUsername();
       String password = data.getPassword();
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
 
       Optional<AccountDTO> currentUser = accountRepository.findByUsername(username);
+      Map<Object,Object> model = new HashMap<>();
 
-      if(!currentUser.isPresent())
-        throw new UsernameNotFoundException("Username " + username + "not found");
+      if (!currentUser.isPresent()) {
+        return badRequest().body("Username " + username + "not found");
+      }
+      if (currentUser.get().getStatus().equalsIgnoreCase(Status.UNVERIFIED_CODE)) {
+        return badRequest().body("Account is not verified");
+      }
 
       String token = jwtTokenProvider.createToken(username, currentUser.get().getRoles());
-
-      Map<Object,Object> model = new HashMap<>();
       model.put(USERNAME, username);
       model.put(TOKEN, token);
       model.put(ROLES, currentUser.get().getRoles());
-      return model;
+      return ok(model);
 
-    } catch (Exception e ){
+    } catch (Exception e){
       throw new BadCredentialsException("Invalid AccountDTO");
     }
   }
 
   @Override
   public ResponseEntity userSignUp(@RequestBody AccountDTO accountDTO) {
+
+    if (checkIfEmailExist(accountDTO.getEmail())) {
+      return badRequest().body("This email already exists!");
+    }
+
     if (!accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
       accountDTO.setPassword(encoder.encode(accountDTO.getPassword()));
       accountDTO.setRoles(singletonList(ACCOUNT_ROLE_USER));
-      return ok(accountRepository.save(accountDTO));
+      accountDTO.setStatus(
+          statusRepostiory.findByStatusCode(Status.UNVERIFIED_CODE).get().getStatusCode());
+      accountRepository.save(accountDTO);
+
+      VerificationTokenDTO verificationToken = new VerificationTokenDTO(accountDTO);
+      verificationTokenRepository.save(verificationToken);
+      LOGGER.info("Token: " + verificationToken.getVerificationToken());
+
+      SimpleMailMessage mailMessage = new SimpleMailMessage();
+      mailMessage.setTo(accountDTO.getEmail());
+      mailMessage.setSubject("Welcome to Fynco!");
+      mailMessage.setFrom("Fynco@gmail.com");
+      mailMessage.setText("To confirm your account Please click the following link: ");
+      emailSenderService.sendEmail(mailMessage);
+      LOGGER.info("EMAIL IS SENT");
+
+      return ok(accountDTO);
     }
     throw new IllegalArgumentException("The username is already in use");
   }
@@ -192,7 +232,28 @@ public class AuthServiceImpl implements AuthService {
       return ok(currentAccount.get());
     }
     return badRequest().body("Account does not exist");
+  }
 
+  @Override
+  public Boolean checkIfEmailExist(String email) {
+    return accountRepository.findByEmailIgnoreCase(email).isPresent();
+  }
 
+  @Override
+  public AccountDTO verifyToken(String token) {
+    Optional<VerificationTokenDTO> verificationToken =
+        verificationTokenRepository.findByVerificationToken(token);
+
+    if (verificationToken.isPresent()) {
+      Optional<AccountDTO> user =
+          accountRepository.findByEmailIgnoreCase(verificationToken.get().getUser().getEmail());
+      if (user.isPresent()) {
+        user.get().setStatus(ACTIVE_CODE);
+        accountRepository.save(user.get());
+        return user.get();
+      }
+    }
+
+    return null;
   }
 }

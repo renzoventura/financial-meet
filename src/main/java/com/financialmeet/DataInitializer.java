@@ -3,6 +3,12 @@ package com.financialmeet;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_AGENT;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_INTERNAL;
 import static com.financialmeet.dto.accounts.AccountDTO.ACCOUNT_ROLE_USER;
+import static com.financialmeet.dto.shared.Status.ACTIVE_CODE;
+import static com.financialmeet.dto.shared.Status.ACTIVE_DESC;
+import static com.financialmeet.dto.shared.Status.ARCHIVED_DESC;
+import static com.financialmeet.dto.shared.Status.UNVERIFIED_CODE;
+import static com.financialmeet.dto.shared.Status.UNVERIFIED_DESC;
+import static com.sun.applet2.preloader.event.ConfigEvent.STATUS;
 import static java.time.LocalDate.ofEpochDay;
 
 import com.financialmeet.dto.accounts.AccountDTO;
@@ -10,11 +16,13 @@ import com.financialmeet.dto.applications.ApplicationDTO;
 import com.financialmeet.dto.applications.ApplicationStatusDTO;
 import com.financialmeet.dto.applications.ApplicationSubTypeDTO;
 import com.financialmeet.dto.applications.ApplicationTypeDTO;
+import com.financialmeet.dto.shared.Status;
 import com.financialmeet.repository.accounts.AccountRepository;
 import com.financialmeet.repository.applications.ApplicationRepository;
 import com.financialmeet.repository.applications.ApplicationStatusRepository;
 import com.financialmeet.repository.applications.ApplicationSubTypeRepository;
 import com.financialmeet.repository.applications.ApplicationTypeRepository;
+import com.financialmeet.repository.shared.StatusRepostiory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +50,9 @@ public class DataInitializer implements CommandLineRunner {
 
   @Autowired
   private ApplicationSubTypeRepository applicationSubTypeRepository;
+
+  @Autowired
+  private StatusRepostiory statusRepostiory;
 
   @Override
   public void run(String... args) {
@@ -244,5 +255,21 @@ public class DataInitializer implements CommandLineRunner {
       agent.setSpecializations(agentSpecialization);
       accountRepository.save(agent);
     }
+
+    Status active = new Status();
+    active.setStatusCode(ACTIVE_CODE);
+    active.setStatusDescription( ACTIVE_DESC);
+    statusRepostiory.save(active);
+
+    Status unverified = new Status();
+    unverified.setStatusCode(UNVERIFIED_CODE);
+    unverified.setStatusDescription(UNVERIFIED_DESC);
+    statusRepostiory.save(unverified);
+
+    Status deleted = new Status();
+    deleted.setStatusCode(Status.ARCHIVED_CODE);
+    deleted.setStatusDescription(ARCHIVED_DESC);
+    statusRepostiory.save(deleted);
+
   }
 }

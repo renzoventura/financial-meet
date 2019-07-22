@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
 
-  Map signIn(AuthenticationRequestDTO data);
+  ResponseEntity<?> signIn(AuthenticationRequestDTO data);
 
   ResponseEntity userSignUp(AccountDTO accountDTO);
 
@@ -33,5 +33,9 @@ public interface AuthService {
   ResponseEntity getAgent(Long accountId);
 
   ResponseEntity getCurrentAccountDetails(UserDetails userDetails);
+
+  Boolean checkIfEmailExist(String email);
+
+  AccountDTO verifyToken(String token);
 
 }

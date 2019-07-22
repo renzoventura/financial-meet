@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.toList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.financialmeet.dto.applications.ApplicationSubTypeDTO;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,8 +16,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -78,9 +75,18 @@ public class AccountDTO implements UserDetails {
 
   private String currentLoan;
 
-/*  //list of applicationSubType Codes
-  @OneToMany(mappedBy="id", fetch = FetchType.LAZY)
-  @Column(name = "specializations")*/
+  @Column(name = "STATUS")
+  private String status;
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  //list of applicationSubType Codes
   @ElementCollection
   @CollectionTable(name = "account_specializations")
   private List<String> specializations;

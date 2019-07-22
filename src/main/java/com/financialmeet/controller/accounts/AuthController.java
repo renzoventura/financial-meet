@@ -54,7 +54,7 @@ public class AuthController {
 
   @PostMapping("/signin")
   public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO currentAccountDetails){
-    return ok(authServiceImpl.signIn(currentAccountDetails));
+    return authServiceImpl.signIn(currentAccountDetails);
   }
 
   @PostMapping("/signup/user")
@@ -99,5 +99,15 @@ public class AuthController {
   @GetMapping("/account/me")
   public ResponseEntity getAgentById(@AuthenticationPrincipal UserDetails userDetails) {
     return ok(authServiceImpl.getCurrentAccountDetails(userDetails));
+  }
+
+  @PostMapping("verify-account")
+  public ResponseEntity verifyAccount(@RequestParam(name = "token") String token){
+    if (authServiceImpl.verifyToken(token) != null) {
+      return ok().body("Account Verified");
+    } else {
+      return badRequest().body("Something went wrong");
+    }
+
   }
 }
