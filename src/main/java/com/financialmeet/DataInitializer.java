@@ -8,7 +8,6 @@ import static com.financialmeet.dto.shared.Status.ACTIVE_DESC;
 import static com.financialmeet.dto.shared.Status.ARCHIVED_DESC;
 import static com.financialmeet.dto.shared.Status.UNVERIFIED_CODE;
 import static com.financialmeet.dto.shared.Status.UNVERIFIED_DESC;
-import static com.sun.applet2.preloader.event.ConfigEvent.STATUS;
 import static java.time.LocalDate.ofEpochDay;
 
 import com.financialmeet.dto.accounts.AccountDTO;

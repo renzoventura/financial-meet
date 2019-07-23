@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
       mailMessage.setSubject("Welcome to Fynco!");
       String mailText = "To confirm your account Please click the following link: " + FRONTEND_URL + verificationToken.getVerificationToken();
       mailMessage.setText(mailText);
-      //emailSenderService.sendEmail(mailMessage);
+      emailSenderService.sendEmail(mailMessage);
       LOGGER.info(mailText);
       LOGGER.info("EMAIL IS SENT");
 
