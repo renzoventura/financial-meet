@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -43,6 +44,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthServiceImpl implements AuthService {
 
   private static final String USERNAME = "username";
+  private static final String EMAIL = "email";
+  private static final String FRONTEND_URL = "http://localhost:4200/verify/";
+  //private static final String FRONTEND_URL = "http://fyncofrontenddev.s3-website-ap-southeast-2.amazonaws.com/verify/";
   private static final String TOKEN = "token";
   private static final String ROLES  = "roles";
 
@@ -82,9 +86,19 @@ public class AuthServiceImpl implements AuthService {
       if (!currentUser.isPresent()) {
         return badRequest().body("Username " + username + "not found");
       }
-      if (currentUser.get().getStatus().equalsIgnoreCase(Status.UNVERIFIED_CODE)) {
-        return badRequest().body("Account is not verified");
+
+      List<String> roles = currentUser.get()
+          .getAuthorities()
+          .stream()
+          .map(GrantedAuthority::getAuthority)
+          .collect(toList());
+
+      if (currentUser.get().getStatus().isEmpty() || roles.contains(ACCOUNT_ROLE_USER)) {
+        if (currentUser.get().getStatus().equalsIgnoreCase(Status.UNVERIFIED_CODE)) {
+          return badRequest().body("Account is not verified");
+        }
       }
+
 
       String token = jwtTokenProvider.createToken(username, currentUser.get().getRoles());
       model.put(USERNAME, username);
@@ -118,9 +132,10 @@ public class AuthServiceImpl implements AuthService {
       SimpleMailMessage mailMessage = new SimpleMailMessage();
       mailMessage.setTo(accountDTO.getEmail());
       mailMessage.setSubject("Welcome to Fynco!");
-      mailMessage.setFrom("Fynco@gmail.com");
-      mailMessage.setText("To confirm your account Please click the following link: ");
-      emailSenderService.sendEmail(mailMessage);
+      String mailText = "To confirm your account Please click the following link: " + FRONTEND_URL + verificationToken.getVerificationToken();
+      mailMessage.setText(mailText);
+      //emailSenderService.sendEmail(mailMessage);
+      LOGGER.info(mailText);
       LOGGER.info("EMAIL IS SENT");
 
       return ok(accountDTO);
@@ -240,7 +255,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public AccountDTO verifyToken(String token) {
+  public ResponseEntity<?> verifyToken(String token) {
     Optional<VerificationTokenDTO> verificationToken =
         verificationTokenRepository.findByVerificationToken(token);
 
@@ -250,10 +265,13 @@ public class AuthServiceImpl implements AuthService {
       if (user.isPresent()) {
         user.get().setStatus(ACTIVE_CODE);
         accountRepository.save(user.get());
-        return user.get();
+        Map<Object,Object> model = new HashMap<>();
+        model.put(USERNAME, user.get().getUsername());
+        model.put(EMAIL, user.get().getEmail());
+        return ok(model);
       }
     }
 
-    return null;
+    return badRequest().body("Cannot Verify account");
   }
 }

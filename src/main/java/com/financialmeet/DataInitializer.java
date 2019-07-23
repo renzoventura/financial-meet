@@ -71,6 +71,7 @@ public class DataInitializer implements CommandLineRunner {
     user.setAnnualIncome("$10,000-$50,000");
     user.setCurrentLoan("$10,000-$50,000");
     user.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
+    user.setStatus(ACTIVE_CODE);
     accountRepository.save(user);
 
     ApplicationStatusDTO status1 = new ApplicationStatusDTO();
@@ -157,6 +158,7 @@ public class DataInitializer implements CommandLineRunner {
     agent.setLastName("Mishima");
     agent.setPassword(this.passwordEncoder.encode("password"));
     agent.setRoles(Collections.singletonList(ACCOUNT_ROLE_AGENT));
+    agent.setStatus(ACTIVE_CODE);
     accountRepository.save(agent);
 
     AccountDTO internal = new AccountDTO();
@@ -165,6 +167,7 @@ public class DataInitializer implements CommandLineRunner {
     internal.setLastName("Account");
     internal.setPassword(this.passwordEncoder.encode("password"));
     internal.setRoles(Collections.singletonList(ACCOUNT_ROLE_INTERNAL));
+    internal.setStatus(ACTIVE_CODE);
     accountRepository.save(internal);
 
     AccountDTO user2 = new AccountDTO();
@@ -173,6 +176,7 @@ public class DataInitializer implements CommandLineRunner {
     user2.setLastName("Phoenix");
     user2.setPassword(this.passwordEncoder.encode("password"));
     user2.setRoles(Collections.singletonList(ACCOUNT_ROLE_USER));
+    user2.setStatus(ACTIVE_CODE);
     accountRepository.save(user2);
 
     List<ApplicationTypeDTO> parentTypes = new ArrayList<>();
@@ -253,6 +257,7 @@ public class DataInitializer implements CommandLineRunner {
         }
       }
       agent.setSpecializations(agentSpecialization);
+      agent.setStatus(ACTIVE_CODE);
       accountRepository.save(agent);
     }
 

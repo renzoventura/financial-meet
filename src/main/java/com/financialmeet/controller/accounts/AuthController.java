@@ -6,6 +6,7 @@ import static org.springframework.http.ResponseEntity.ok;
 import com.financialmeet.dto.accounts.AccountDTO;
 import com.financialmeet.dto.accounts.AuthenticationRequestDTO;
 import com.financialmeet.service.impl.AuthServiceImpl;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -101,13 +102,9 @@ public class AuthController {
     return ok(authServiceImpl.getCurrentAccountDetails(userDetails));
   }
 
-  @PostMapping("verify-account")
+  @GetMapping("/verify-account")
   public ResponseEntity verifyAccount(@RequestParam(name = "token") String token){
-    if (authServiceImpl.verifyToken(token) != null) {
-      return ok().body("Account Verified");
-    } else {
-      return badRequest().body("Something went wrong");
-    }
+    return authServiceImpl.verifyToken(token);
 
   }
 }

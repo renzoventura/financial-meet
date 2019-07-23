@@ -36,6 +36,6 @@ public interface AuthService {
 
   Boolean checkIfEmailExist(String email);
 
-  AccountDTO verifyToken(String token);
+  ResponseEntity<?> verifyToken(String token);
 
 }
