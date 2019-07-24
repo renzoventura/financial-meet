@@ -45,8 +45,8 @@ public class AuthServiceImpl implements AuthService {
 
   private static final String USERNAME = "username";
   private static final String EMAIL = "email";
-  private static final String FRONTEND_URL = "http://localhost:4200/verify/";
-  //private static final String FRONTEND_URL = "http://fyncofrontenddev.s3-website-ap-southeast-2.amazonaws.com/verify/";
+  //private static final String FRONTEND_URL = "http://localhost:4200/verify/";
+  private static final String FRONTEND_URL = "http://fyncofrontenddev.s3-website-ap-southeast-2.amazonaws.com/verify/";
   private static final String TOKEN = "token";
   private static final String ROLES  = "roles";
 
@@ -115,7 +115,7 @@ public class AuthServiceImpl implements AuthService {
   public ResponseEntity userSignUp(@RequestBody AccountDTO accountDTO) {
 
     if (checkIfEmailExist(accountDTO.getEmail())) {
-      return badRequest().body("This email already exists!");
+      throw new IllegalArgumentException("Email is already Registered");
     }
 
     if (!accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
@@ -123,10 +123,8 @@ public class AuthServiceImpl implements AuthService {
       accountDTO.setRoles(singletonList(ACCOUNT_ROLE_USER));
       accountDTO.setStatus(
           statusRepostiory.findByStatusCode(Status.UNVERIFIED_CODE).get().getStatusCode());
-      accountRepository.save(accountDTO);
 
       VerificationTokenDTO verificationToken = new VerificationTokenDTO(accountDTO);
-      verificationTokenRepository.save(verificationToken);
       LOGGER.info("Token: " + verificationToken.getVerificationToken());
 
       SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -134,7 +132,13 @@ public class AuthServiceImpl implements AuthService {
       mailMessage.setSubject("Welcome to Fynco!");
       String mailText = "To confirm your account Please click the following link: " + FRONTEND_URL + verificationToken.getVerificationToken();
       mailMessage.setText(mailText);
-      emailSenderService.sendEmail(mailMessage);
+      try {
+        emailSenderService.sendEmail(mailMessage);
+      } catch (Exception e) {
+        throw new IllegalArgumentException("Email is invalid!");
+      }
+      accountRepository.save(accountDTO);
+      verificationTokenRepository.save(verificationToken);
       LOGGER.info(mailText);
       LOGGER.info("EMAIL IS SENT");
 
