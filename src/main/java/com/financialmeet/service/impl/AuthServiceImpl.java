@@ -35,7 +35,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,7 +45,17 @@ public class AuthServiceImpl implements AuthService {
   private static final String USERNAME = "username";
   private static final String EMAIL = "email";
   //private static final String FRONTEND_URL = "http://localhost:4200/verify/";
-  private static final String FRONTEND_URL = "http://fyncofrontenddev.s3-website-ap-southeast-2.amazonaws.com/verify/";
+  //private static final String FRONTEND_URL = "http://fyncofrontenddev.s3-website-ap-southeast-2.amazonaws.com/verify/";
+
+  @Value("${mail.domain}")
+  private String FRONTEND_URL;
+
+  @Value("${mail.subject}")
+  private String MAIL_SUBJECT;
+
+  @Value("${mail.text}")
+  private String MAIL_TEXT;
+
   private static final String TOKEN = "token";
   private static final String ROLES  = "roles";
 
@@ -99,7 +108,6 @@ public class AuthServiceImpl implements AuthService {
         }
       }
 
-
       String token = jwtTokenProvider.createToken(username, currentUser.get().getRoles());
       model.put(USERNAME, username);
       model.put(TOKEN, token);
@@ -129,8 +137,8 @@ public class AuthServiceImpl implements AuthService {
 
       SimpleMailMessage mailMessage = new SimpleMailMessage();
       mailMessage.setTo(accountDTO.getEmail());
-      mailMessage.setSubject("Welcome to Fynco!");
-      String mailText = "To confirm your account Please click the following link: " + FRONTEND_URL + verificationToken.getVerificationToken();
+      mailMessage.setSubject(MAIL_SUBJECT);
+      String mailText = MAIL_TEXT + FRONTEND_URL + verificationToken.getVerificationToken();
       mailMessage.setText(mailText);
       try {
         emailSenderService.sendEmail(mailMessage);
@@ -148,12 +156,18 @@ public class AuthServiceImpl implements AuthService {
   }
 
   public ResponseEntity agentSignUp(@RequestBody AccountDTO accountDTO) {
-    if (!accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
-      accountDTO.setPassword(encoder.encode(accountDTO.getPassword()));
-      accountDTO.setRoles(singletonList(ACCOUNT_ROLE_AGENT));
-      return ok(accountRepository.save(accountDTO));
+    if (accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
+      throw new IllegalArgumentException("The username is already in use");
     }
-    throw new IllegalArgumentException("The username is already in use");
+
+    if(accountRepository.findByEmailIgnoreCase(accountDTO.getEmail()).isPresent()) {
+      throw new IllegalArgumentException("This Email is already in use");
+    }
+
+    accountDTO.setStatus(ACTIVE_CODE);
+    accountDTO.setPassword(encoder.encode(accountDTO.getPassword()));
+    accountDTO.setRoles(singletonList(ACCOUNT_ROLE_AGENT));
+    return ok(accountRepository.save(accountDTO));
   }
 
   @Override

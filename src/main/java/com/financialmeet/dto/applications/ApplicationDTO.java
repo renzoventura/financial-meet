@@ -27,7 +27,6 @@ public class ApplicationDTO {
   @NotNull
   private long id;
 
-  @NotEmpty
   @Column(name = "application_title")
   private String title;
 
@@ -57,6 +56,23 @@ public class ApplicationDTO {
 
   @JsonFormat(pattern="dd-MM-yyyy")
   private LocalDate dateCreated;
+
+  //remove later for future information
+  private String annualIncome;
+
+  private String overtimeBonus;
+
+  private String rentalIncome;
+
+  private String businessIncome;
+
+  private String otherIncome;
+
+  private String expectedLoan;
+
+  private String loan;
+
+  private String otherInformation;
 
   public String getStatus() {
     return status;
@@ -134,4 +150,67 @@ public class ApplicationDTO {
     this.subType = subType;
   }
 
+  public String getAnnualIncome() {
+    return annualIncome;
+  }
+
+  public void setAnnualIncome(String annualIncome) {
+    this.annualIncome = annualIncome;
+  }
+
+  public String getOvertimeBonus() {
+    return overtimeBonus;
+  }
+
+  public void setOvertimeBonus(String overtimeBonus) {
+    this.overtimeBonus = overtimeBonus;
+  }
+
+  public String getRentalIncome() {
+    return rentalIncome;
+  }
+
+  public void setRentalIncome(String rentalIncome) {
+    this.rentalIncome = rentalIncome;
+  }
+
+  public String getBusinessIncome() {
+    return businessIncome;
+  }
+
+  public void setBusinessIncome(String businessIncome) {
+    this.businessIncome = businessIncome;
+  }
+
+  public String getOtherIncome() {
+    return otherIncome;
+  }
+
+  public void setOtherIncome(String otherIncome) {
+    this.otherIncome = otherIncome;
+  }
+
+  public String getExpectedLoan() {
+    return expectedLoan;
+  }
+
+  public void setExpectedLoan(String expectedLoan) {
+    this.expectedLoan = expectedLoan;
+  }
+
+  public String getLoan() {
+    return loan;
+  }
+
+  public void setLoan(String loan) {
+    this.loan = loan;
+  }
+
+  public String getOtherInformation() {
+    return otherInformation;
+  }
+
+  public void setOtherInformation(String otherInformation) {
+    this.otherInformation = otherInformation;
+  }
 }

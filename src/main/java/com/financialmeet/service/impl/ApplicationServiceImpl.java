@@ -211,6 +211,7 @@ public class ApplicationServiceImpl implements ApplicationService {
               .getStatuses()
               .get(0)
               .getApplicationStatusCode()); // set first
+
       applicationDTO.setOwner(currentAccount.get());
       applicationDTO.setDateCreated(LocalDate.now());
       applicationRepository.save(applicationDTO);
