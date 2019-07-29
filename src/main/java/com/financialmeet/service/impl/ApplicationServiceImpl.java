@@ -50,7 +50,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getAllApplications(
-      String applicationTitle, String type, String subType, Integer page, Integer size, String order) {
+      Long id, String type, String subType, Integer page, Integer size, String order) {
 
     //change these to enum waste of read
     Optional<ApplicationTypeDTO> currentApplicationType =
@@ -64,8 +64,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     if (!order.isEmpty()) {
       Pageable pageable = createPageRequest(page, size, getDirection(order), APPLICATION_ATTRIBUTE_DATE_CREATED);
-      return applicationRepository.findAllByTitleContainingAndTypeContainingAndSubTypeContaining(
-          applicationTitle, type, subType, pageable);
+      if (id != null) {
+        return applicationRepository.findAllByIdIn(id, pageable);
+      }
+      return applicationRepository.findAllByTypeContainingAndSubTypeContaining(type, subType, pageable);
     }
 
     return null;
@@ -147,7 +149,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getApplicationsByAgent(
-      UserDetails userDetails, String applicationTitle, String type, String subType, Integer page, Integer size, String order) {
+      UserDetails userDetails, Long id, String type, String subType, Integer page, Integer size, String order) {
     Optional<AccountDTO> currentAccount =
         accountRepository.findByUsername(userDetails.getUsername());
 
@@ -166,8 +168,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     if (currentAccount.isPresent()) {
       if (!order.isEmpty()) {
         Pageable pageable = createPageRequest(page, size, getDirection(order), APPLICATION_ATTRIBUTE_DATE_CREATED);
-        return applicationRepository.findByAgentAndTitleContainingAndTypeContainingAndSubTypeContaining(
-            currentAccount.get(), applicationTitle, type, subType, pageable);
+        if (id != null) {
+          return applicationRepository.findAllByIdIn(id, pageable);
+        }
+        return applicationRepository.findByAgentAndTypeContainingAndSubTypeContaining(
+            currentAccount.get(), type, subType, pageable);
       }
     }
     return null;
@@ -257,7 +262,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   public Iterable<ApplicationDTO> getApplicationsByOwner(
-      UserDetails userDetails, String applicationTitle, String type, String subType, Integer page, Integer size, String order) {
+      UserDetails userDetails, Long id, String type, String subType, Integer page, Integer size, String order) {
     Optional<AccountDTO> currentAccount =
         accountRepository.findByUsername(userDetails.getUsername());
 
@@ -276,8 +281,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     if (currentAccount.isPresent()) {
       if (!order.isEmpty()) {
         Pageable pageable = createPageRequest(page, size, getDirection(order), APPLICATION_ATTRIBUTE_DATE_CREATED);
-        return applicationRepository.findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContaining(
-            currentAccount.get(), applicationTitle, type, subType, pageable);
+        if (id != null) {
+          return applicationRepository.findAllByIdIn(id, pageable);
+        }
+        return applicationRepository.findByOwnerAndTypeContainingAndSubTypeContaining(
+            currentAccount.get(), type, subType, pageable);
       }
     }
     return null;

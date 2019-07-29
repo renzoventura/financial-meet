@@ -200,7 +200,6 @@ public class DataInitializer implements CommandLineRunner {
     for (int i = 0; i < 20; i++) {
       ApplicationDTO application = new ApplicationDTO();
       application.setOwner(user);
-      application.setTitle(String.format("%d Application", i));
       application.setDescription(String.format("%d Application Description", i));
       long minDay = LocalDate.of(2019, 1, 1).toEpochDay();
       long randomDay = ThreadLocalRandom.current().nextLong(minDay, LocalDate.now().toEpochDay());

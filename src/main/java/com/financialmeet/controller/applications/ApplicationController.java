@@ -26,13 +26,13 @@ public class ApplicationController {
 
   @GetMapping("/i/all")
   private ResponseEntity getAllApplications(
-      @RequestParam(value = "title", required = false) String applicationTitle,
+      @RequestParam(value = "id", required = false) Long id,
       @RequestParam(value = "type", required = false) String type,
       @RequestParam(value = "subType", required = false) String subType,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size,
       @RequestParam(value = "order", required = false) String order) {
-    return ok(applicationServiceImpl.getAllApplications(applicationTitle, type,
+    return ok(applicationServiceImpl.getAllApplications(id, type,
         subType, page, size, order));
   }
 
@@ -45,28 +45,28 @@ public class ApplicationController {
   @GetMapping("/u/current")
   private ResponseEntity getApplicationsByOwner(
       @AuthenticationPrincipal UserDetails userDetails,
-      @RequestParam(value = "title", required = false) String applicationTitle,
+      @RequestParam(value = "id", required = false) Long id,
       @RequestParam(value = "type", required = false) String type,
       @RequestParam(value = "subType", required = false) String subType,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size,
       @RequestParam(value = "order", required = false) String order) {
     return ok(
-        applicationServiceImpl.getApplicationsByOwner(userDetails, applicationTitle, type,
+        applicationServiceImpl.getApplicationsByOwner(userDetails, id, type,
             subType, page, size, order));
   }
 
   @GetMapping("/a/current")
   private ResponseEntity getApplicationByAgent(
       @AuthenticationPrincipal UserDetails userDetails,
-      @RequestParam(value = "title", required = false) String applicationTitle,
+      @RequestParam(value = "id", required = false) Long id,
       @RequestParam(value = "type", required = false) String type,
       @RequestParam(value = "subType", required = false) String subType,
       @RequestParam(value = "page", required = false) Integer page,
       @RequestParam(value = "size", required = false) Integer size,
       @RequestParam(value = "order", required = false) String order) {
     return ok(
-        applicationServiceImpl.getApplicationsByAgent(userDetails, applicationTitle, type,
+        applicationServiceImpl.getApplicationsByAgent(userDetails, id, type,
             subType, page, size, order));
   }
 

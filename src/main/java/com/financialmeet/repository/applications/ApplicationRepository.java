@@ -8,10 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ApplicationRepository extends JpaRepository<ApplicationDTO, Long> {
 
-  Page<ApplicationDTO> findAllByTitleContainingAndTypeContainingAndSubTypeContaining(String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
+  Page<ApplicationDTO> findAllByTypeContainingAndSubTypeContaining(String applicationType, String applicationSubType, Pageable pageable);
 
-  Page<ApplicationDTO> findByOwnerAndTitleContainingAndTypeContainingAndSubTypeContaining(AccountDTO accountDTO, String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
+  Page<ApplicationDTO> findAllByIdIn(Long id, Pageable pageable);
 
-  Page<ApplicationDTO> findByAgentAndTitleContainingAndTypeContainingAndSubTypeContaining(AccountDTO accountDTO, String applicationTitle, String applicationType, String applicationSubType, Pageable pageable);
+  Page<ApplicationDTO> findByOwnerAndTypeContainingAndSubTypeContaining(AccountDTO accountDTO, String applicationType, String applicationSubType, Pageable pageable);
+
+  Page<ApplicationDTO> findByAgentAndTypeContainingAndSubTypeContaining(AccountDTO accountDTO, String applicationType, String applicationSubType, Pageable pageable);
 
 }

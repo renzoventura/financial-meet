@@ -27,9 +27,6 @@ public class ApplicationDTO {
   @NotNull
   private long id;
 
-  @Column(name = "application_title")
-  private String title;
-
   @Column(name = "application_description")
   private String description;
 
@@ -108,14 +105,6 @@ public class ApplicationDTO {
 
   public void setInternal(AccountDTO internal) {
     this.internal = internal;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
   }
 
   public AccountDTO getOwner() {
