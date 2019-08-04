@@ -45,7 +45,6 @@ public class AuthServiceImpl implements AuthService {
   private static final String USERNAME = "username";
   private static final String EMAIL = "email";
   //private static final String FRONTEND_URL = "http://localhost:4200/verify/";
-  //private static final String FRONTEND_URL = "http://fyncofrontenddev.s3-website-ap-southeast-2.amazonaws.com/verify/";
 
   @Value("${mail.domain}")
   private String FRONTEND_URL;
@@ -130,25 +129,26 @@ public class AuthServiceImpl implements AuthService {
       accountDTO.setPassword(encoder.encode(accountDTO.getPassword()));
       accountDTO.setRoles(singletonList(ACCOUNT_ROLE_USER));
       accountDTO.setStatus(
-          statusRepostiory.findByStatusCode(Status.UNVERIFIED_CODE).get().getStatusCode());
+          statusRepostiory.findByStatusCode(Status.ACTIVE_CODE).get().getStatusCode());
 
       VerificationTokenDTO verificationToken = new VerificationTokenDTO(accountDTO);
       LOGGER.info("Token: " + verificationToken.getVerificationToken());
 
-      SimpleMailMessage mailMessage = new SimpleMailMessage();
-      mailMessage.setTo(accountDTO.getEmail());
-      mailMessage.setSubject(MAIL_SUBJECT);
-      String mailText = MAIL_TEXT + FRONTEND_URL + verificationToken.getVerificationToken();
-      mailMessage.setText(mailText);
-      try {
-        emailSenderService.sendEmail(mailMessage);
-      } catch (Exception e) {
-        throw new IllegalArgumentException("Email is invalid!");
-      }
+//      SimpleMailMessage mailMessage = new SimpleMailMessage();
+//      mailMessage.setTo(accountDTO.getEmail());
+//      mailMessage.setSubject(MAIL_SUBJECT);
+//      String mailText = MAIL_TEXT + FRONTEND_URL + verificationToken.getVerificationToken();
+//      mailMessage.setText(mailText);
+//      try {
+//        emailSenderService.sendEmail(mailMessage);
+//      } catch (Exception e) {
+//        throw new IllegalArgumentException("Email is invalid!");
+//      }
+
       accountRepository.save(accountDTO);
       verificationTokenRepository.save(verificationToken);
-      LOGGER.info(mailText);
-      LOGGER.info("EMAIL IS SENT");
+//      LOGGER.info(mailText);
+//      LOGGER.info("EMAIL IS SENT");
 
       return ok(accountDTO);
     }
