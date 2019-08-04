@@ -1,6 +1,6 @@
 package com.financialmeet;
 
-import com.financialmeet.model.Account;
+import com.financialmeet.dto.accounts.AccountDTO;
 import java.util.Optional;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
 public class FinancialMeetApplication {
@@ -31,7 +34,7 @@ public class FinancialMeetApplication {
 class DataJpaConfig {
 
 	@Bean
-	public AuditorAware<Account> auditor() {
+	public AuditorAware<AccountDTO> auditor() {
 		return () -> {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -39,8 +42,27 @@ class DataJpaConfig {
 				return Optional.empty();
 			}
 
-			return Optional.of((Account) authentication.getPrincipal());
+			return Optional.of((AccountDTO) authentication.getPrincipal());
 		};
 	}
+}
+
+@Configuration
+class RestConfig {
+  @Bean
+  public CorsFilter corsFilter() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.addAllowedOrigin("*");
+    config.addAllowedHeader("*");
+    config.addAllowedMethod("OPTIONS");
+    config.addAllowedMethod("GET");
+    config.addAllowedMethod("POST");
+    config.addAllowedMethod("PUT");
+    config.addAllowedMethod("DELETE");
+    source.registerCorsConfiguration("/**", config);
+    return new CorsFilter(source);
+  }
 }
 

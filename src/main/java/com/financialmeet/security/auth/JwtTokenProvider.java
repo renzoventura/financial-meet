@@ -22,7 +22,7 @@ public class JwtTokenProvider {
 
   private String secretKey = "secret"; // to encode
 
-  private long validityInMilliseconds = 60000000; // 2 mins
+  private long validityInMilliseconds = 1800000; // 30 mins
 
   @Autowired
   private CustomUserDetailsService userDetailsService;
@@ -67,11 +67,11 @@ public class JwtTokenProvider {
     try {
       //JWS - JSON web start, JWT  uses JWS for its signature, from the spec:
       Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-      if (claims.getBody().getExpiration().before(new Date())){
+      if (claims.getBody().getExpiration().before(new Date())) {
         return false;
       }
       return true;
-    } catch (JwtException e){
+    } catch (JwtException | IllegalArgumentException e){
       throw new JwtException("Jwt Token Expired;");
     }
   }

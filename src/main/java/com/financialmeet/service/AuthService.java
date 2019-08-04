@@ -1,21 +1,41 @@
 package com.financialmeet.service;
 
-import com.financialmeet.model.Account;
-import com.financialmeet.model.AuthenticationRequest;
+import com.financialmeet.dto.accounts.AccountDTO;
+import com.financialmeet.dto.accounts.AuthenticationRequestDTO;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
 
-  Map signIn(AuthenticationRequest data);
+  ResponseEntity<?> signIn(AuthenticationRequestDTO data);
 
-  ResponseEntity userSignUp(Account account);
+  ResponseEntity userSignUp(AccountDTO accountDTO);
 
-  ResponseEntity agentSignUp(Account account);
+  ResponseEntity agentSignUp(AccountDTO accountDTO);
 
-  ResponseEntity internalSignUp(Account account);
+  ResponseEntity internalSignUp(AccountDTO accountDTO);
 
-  ResponseEntity getCurrentUserDetails(UserDetails userDetails);
+  Map<Object, Object> getCurrentUserDetails(UserDetails userDetails);
+
+  Map<Object, Object> getCurrentUserRoles(UserDetails userDetails);
+
+  ResponseEntity checkTokenVadility(String token);
+
+  Iterable checkRole(UserDetails userDetails);
+
+  Iterable<AccountDTO> getAllUsers();
+
+  Iterable<AccountDTO> getAllAgents(String firstName, String lastName, String suburb, String subType, Integer page, Integer size);
+
+  Iterable<AccountDTO> getAllInternals();
+
+  ResponseEntity getAgent(Long accountId);
+
+  ResponseEntity getCurrentAccountDetails(UserDetails userDetails);
+
+  Boolean checkIfEmailExist(String email);
+
+  ResponseEntity<?> verifyToken(String token);
 
 }

@@ -1,6 +1,6 @@
 package com.financialmeet.security;
 
-import com.financialmeet.repository.AccountRepository;
+import com.financialmeet.repository.accounts.AccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +15,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     this.accounts = accounts;
   }
 
-  @Override //since Account implements UserDetails
+  @Override //since AccountDTO implements UserDetails
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return this.accounts.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));

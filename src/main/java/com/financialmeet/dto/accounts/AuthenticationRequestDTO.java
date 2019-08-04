@@ -1,4 +1,4 @@
-package com.financialmeet.model;
+package com.financialmeet.dto.accounts;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest implements Serializable {
+public class AuthenticationRequestDTO implements Serializable {
 
   private String username;
   private String password;
